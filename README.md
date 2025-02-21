@@ -8,6 +8,7 @@ To clone this project from GitHub, run the following command:
 
 ````bash
 git clone https://github.com/sombit-k/DUhacks.git
+````
 ## Installing dependencies
 
 Navigate to the project directory and run the following commands to install dependencies and start the development server:
