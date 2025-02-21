@@ -23,15 +23,13 @@ Do the above for both /backend and /frontend and parent folder. Which means you 
 To run backend:
 
 ```bash
-cd backend
-npm run dev
+npm run backend
 ```
 
 To run frontend:
 
 ```bash
-cd frontend
-npm run dev
+npm run frontend
 ```
 
 To run both, make sure you are in the parent folder:
