@@ -6,7 +6,7 @@ Instructions for initial setup
 To clone this project from GitHub, run the following command:
 
 ```bash
-git clone https://github.com/your-username/DUhacks.git
+git clone https://github.com/sombit-k/DUhacks.git
 ```
 
 ## Installing dependencies
