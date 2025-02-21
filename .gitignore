@@ -18,6 +18,8 @@ dist-ssr
 *.local
 .env
 
+backend/.env
+
 # Package manager lock files
 package-lock.json
 yarn.lock
@@ -33,3 +35,5 @@ pnpm-lock.yaml
 *.njsproj
 *.sln
 *.sw?
+
+.env
