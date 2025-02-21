@@ -1,19 +1,22 @@
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import Sidebar from './components/Sidebar';
+import React from "react";
 
+import Homepage from "./components/Homepage";
+import LoginFrom from "./components/LoginFrom";
+import SignupForm from "./components/SignupForm";
 
-
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 function App() {
-
   return (
-    <>
-    
-      <Navbar />
-      {/* <Sidebar/> */}
-      {/* <Footer /> */}
-    </>
-  )
+    <BrowserRouter>
+      <div>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/login" element={<LoginFrom />} />
+          <Route path="/signup" element={<SignupForm />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
