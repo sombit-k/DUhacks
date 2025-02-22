@@ -7,8 +7,8 @@ import { Eye, EyeOff } from "lucide-react";
 const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: "",
     email: "",
+    username:"",
     password: "",
   });
   const { signUp, isSigningUp } = useAuthStore();

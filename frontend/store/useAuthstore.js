@@ -29,10 +29,11 @@ export const useAuthStore=create((set,get)=>({
     signUp: async(data)=>{
         set({isSigningUp:true})
         try {
-            const res=await axiosInstance.post("/?????/signup",data)//route from backend--signup route
+            const res=await axiosInstance.post("/register",data)//route from backend--signup route
             set({authUser:res.data})
+            console.log("signup successful");
+            
             toast.success("Account created successfully!")
-            get().connectSocket()
 
         } catch (error) {
             toast.error(error.response.data.message)
