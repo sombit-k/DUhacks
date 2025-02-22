@@ -1,34 +1,42 @@
 import mongoose from "mongoose";
 import express from "express";
-
-
+import dotenv from "dotenv";
+import inventoryRoutes from "./routes/inventoryRoutes.js";
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import User from './models/user.js';
 import session from 'express-session';
-import dotenv from 'dotenv';
 import userRouter from './routes/user.js';
+import cookieParser from "cookie-parser"
+import cors from "cors"
 
 dotenv.config()
-const PORT=process.env.PORT || 5000;
+const PORT=process.env.PORT || 3000;
 
 const app = express();
+app.use(cookieParser())
 
-export const connectDb=async()=>{
-    try{
-        const conn=await mongoose.connect(process.env.MONGODB_URI)
-        console.log(`Successfully connected`,conn.connection.host)
-        startServer();
-    } catch(err){
-        console.log("Error encountered while connecting",err)
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+
+}))
+
+// Middleware to parse JSON request bodies
+app.use(express.json());
+
+export const connectDb = async () => {
+    try {
+        const conn = await mongoose.connect(process.env.MONGODB_URI)
+        console.log(`Successfully connected`, conn.connection.host)
+    } catch (err) {
+        console.log("Error encountered while connecting", err)
     }
 }
 
-const startServer = () => {
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-    });
-};
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
 
 connectDb();
  
@@ -59,18 +67,16 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // Use routes for user-related functionality
-app.use("/", userRouter);
+app.use("/api/user", userRouter);
+app.use("/api/inventory", inventoryRoutes);
 
 
+<<<<<<< HEAD
 app.get("/demouser", async(req,res)=>{
     let fakeuser = new User({
         email:"alpha@gmail.com",
         username: "student"
     });
+=======
+>>>>>>> 9656c108e977ea6c89bf5f6ff8ba1b64d28cf3c4
 
-    let registredUser= await User.register(fakeuser,"autinicate");
-    res.send(registredUser);
-})
-// app.get("/", (req, res) => {
-//     res.send("Hi, I am root");
-// });

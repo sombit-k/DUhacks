@@ -6,7 +6,7 @@ import { Eye, EyeOff } from "lucide-react";
 const  LoginForm=()=> {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
   });
   const { logIn, isLoggingIn } = useAuthStore();
@@ -41,7 +41,7 @@ const  LoginForm=()=> {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email
+                Username
               </label>
               <input
                 type="text"
@@ -50,7 +50,7 @@ const  LoginForm=()=> {
                 className="input input-bordered mt-1 p-2 w-full border rounded-md bg-white text-black  focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
                 placeholder="you@example.com"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               />
             </div>
             <div>

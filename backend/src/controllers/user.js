@@ -11,12 +11,14 @@ passport.use(new LocalStrategy(
       const user = await User.findOne({ username });
 
       if (!user) {
+        console.log("User not found");
         return done(null, false, { message: 'User not found' });
       }
 
       // Check if password is correct
       const isPasswordCorrect = await user.comparePassword(password);
       if (!isPasswordCorrect) {
+        console.log("Invalid password");
         return done(null, false, { message: 'Invalid password' });
       }
 
@@ -89,6 +91,7 @@ const logout = (req, res) => {
   });
 };
 
+<<<<<<< HEAD
 
 const check = (req, res) => {
   // Check if user is logged in
@@ -144,3 +147,10 @@ const updateUser = async (req, res) => {
 
 
 export { login, register, logout, check , updateUser};
+=======
+// const check=(req,res)=>{
+//     res.status(200).json(req.user)
+// } edit this. 
+
+export { login, register, logout };
+>>>>>>> 9656c108e977ea6c89bf5f6ff8ba1b64d28cf3c4
