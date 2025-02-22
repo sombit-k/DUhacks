@@ -11,12 +11,14 @@ passport.use(new LocalStrategy(
       const user = await User.findOne({ username });
 
       if (!user) {
+        console.log("User not found");
         return done(null, false, { message: 'User not found' });
       }
 
       // Check if password is correct
       const isPasswordCorrect = await user.comparePassword(password);
       if (!isPasswordCorrect) {
+        console.log("Invalid password");
         return done(null, false, { message: 'Invalid password' });
       }
 

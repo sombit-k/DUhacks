@@ -59,7 +59,7 @@ export const useAuthStore=create((set,get)=>({
 
         set({isLoggingIn:true})
         try {
-            const res= await axiosInstance.post("/???/login",data)//set routes as backends
+            const res= await axiosInstance.post("/user/login",data)//set routes as backend
             set({authUser:res.data})
             toast.success("Login successfull!")
         } catch (error) {
