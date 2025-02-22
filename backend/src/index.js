@@ -1,13 +1,26 @@
 import mongoose from "mongoose";
 import express from "express";
 import dotenv from "dotenv";
-import { data } from "./init/data.js";
 import medicinesRoutes from "./routes/medicinesRoutes.js";
+import passport from 'passport';
+import LocalStrategy from 'passport-local';
+import User from './models/user.js';
+import session from 'express-session';
+import userRouter from './routes/user.js';
+import cookieParser from "cookie-parser"
+import cors from "cors"
 
 dotenv.config()
-const PORT = process.env.PORT
+const PORT=process.env.PORT || 3000;
 
 const app = express();
+app.use(cookieParser())
+
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+
+}))
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
@@ -21,25 +34,40 @@ export const connectDb = async () => {
     }
 }
 
-// app.get("/", (req, res) => {
-//     res.send("API is running");
-// })
-//TO save sample data to the database
-
-// const initDB = async () => {
-//     await Inventory.deleteMany();
-//     await Inventory.insertMany(data);
-//     console.log("Sample data was saved");
-
-// }
-
-app.use("/", medicinesRoutes);
-
-
 app.listen(PORT, () => {
-    connectDb()
-    // .then(() => {
-    //     initDB();
-    // })
-    console.log(`Server is running on port ${PORT}`)
-})
+    console.log(`Server is running on port ${PORT}`);
+});
+
+connectDb();
+ 
+
+const sessionOptions = {
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+    }
+};
+
+
+app.use(session(sessionOptions));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Configure Passport Local Strategy
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// Use routes for user-related functionality
+app.use("/api/user", userRouter);
+app.use("/api/medicines", medicinesRoutes);
+
+
