@@ -1,6 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import undrawsvg from "../assets/signup.svg";
-function SignupForm() {
+import { useAuthStore } from "../../store/useAuthstore";
+import toast from 'react-hot-toast'
+
+const SignupForm=()=> {
+
+  const [formData,setFormData]=useState(
+    {
+      fullName:"",
+      email:"",
+      password:""
+    }
+  )
+  const {signUp,isSigningUp}=useAuthStore()
+
+  const validateForm = () => {
+    if (!formData.fullName.trim()) return toast.error("Full name is required");
+    if (!formData.email.trim()) return toast.error("Email is required");
+    if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
+    if (!formData.password) return toast.error("Password is required");
+    if (formData.password.length < 6) return toast.error("Password must be at least 6 characters");
+
+    return true;
+  };
+  const handleSubmit=(e)=>{
+    e.preventDefault()
+    const success=validateForm()
+    if(success === true) {
+    signUp(formData)// ekhan theke data pathano lagbe********************** tarpor zustand theke backend
+    }
+  }
   return (
     <div className="flex h-screen">
       {/* Left Pane */}
@@ -19,7 +48,7 @@ function SignupForm() {
             Join our App
           </h1>
 
-          <form action="#" method="POST" className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label
                 htmlFor="username"
@@ -32,6 +61,8 @@ function SignupForm() {
                 id="username"
                 name="username"
                 className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
+                value={formData.fullName}
+                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
               />
             </div>
             <div>
