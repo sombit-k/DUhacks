@@ -84,4 +84,4 @@ const logout = (req, res) => {
 //     res.status(200).json(req.user)
 // } edit this. 
 
-export { login, register, logout, check };
+export { login, register, logout };

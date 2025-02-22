@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import express from "express";
 import dotenv from "dotenv";
-import medicinesRoutes from "./routes/medicinesRoutes.js";
+import inventoryRoutes from "./routes/inventoryRoutes.js";
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import User from './models/user.js';
@@ -17,7 +17,7 @@ const app = express();
 app.use(cookieParser())
 
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin:"http://localhost:5174",
     credentials:true
 
 }))
@@ -68,7 +68,7 @@ passport.deserializeUser(User.deserializeUser());
 
 // Use routes for user-related functionality
 app.use("/api/user", userRouter);
-app.use("/api/medicines", medicinesRoutes);
+app.use("/api/inventory", inventoryRoutes);
 
 
 

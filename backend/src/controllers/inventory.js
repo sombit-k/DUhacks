@@ -1,4 +1,4 @@
-import Medicine from "../models/medicines.models.js";
+import Medicine from "../models/inventory.model.js";
 
 export const showAllMedicines = async (req, res) => {
     const { user_id } = req.params;
