@@ -1,13 +1,11 @@
 import mongoose from "mongoose";
 import express from "express";
 import dotenv from "dotenv";
-import { data } from "./init/data.js";
 import medicinesRoutes from "./routes/medicinesRoutes.js";
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import User from './models/user.js';
 import session from 'express-session';
-import dotenv from 'dotenv';
 import userRouter from './routes/user.js';
 import cookieParser from "cookie-parser"
 import cors from "cors"
@@ -70,7 +68,7 @@ passport.deserializeUser(User.deserializeUser());
 
 // Use routes for user-related functionality
 app.use("/api/user", userRouter);
-app.use("/api/medicines", inventoryRoutes);
+app.use("/api/medicines", medicinesRoutes);
 
 
 

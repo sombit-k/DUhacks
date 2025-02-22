@@ -80,4 +80,8 @@ const logout = (req, res) => {
   });
 };
 
-export { login, register, logout };
+// const check=(req,res)=>{
+//     res.status(200).json(req.user)
+// } edit this. 
+
+export { login, register, logout, check };
