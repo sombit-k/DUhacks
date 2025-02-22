@@ -14,7 +14,7 @@ const SignupForm = () => {
   const { signUp, isSigningUp } = useAuthStore();
 
   const validateForm = () => {
-    if (!formData.fullName.trim()) return toast.error("Full name is required");
+    if (!formData.username.trim()) return toast.error("Full name is required");
     if (!formData.email.trim()) return toast.error("Email is required");
     if (!/\S+@\S+\.\S+/.test(formData.email))
       return toast.error("Invalid email format");
@@ -62,9 +62,9 @@ const SignupForm = () => {
                 id="username"
                 name="username"
                 className="input input-bordered mt-1 p-2 w-full border rounded-md bg-white text-black focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
-                value={formData.fullName}
+                value={formData.username}
                 onChange={e =>
-                  setFormData({ ...formData, fullName: e.target.value })
+                  setFormData({ ...formData, username: e.target.value })
                 }
               />
             </div>
