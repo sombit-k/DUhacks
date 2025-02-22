@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import express from "express";
+import dotenv from "dotenv";
+import { data } from "./init/data.js";
+import medicinesRoutes from "./routes/medicinesRoutes.js";
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import User from './models/user.js';
@@ -11,6 +14,7 @@ import cors from "cors"
 
 dotenv.config()
 const PORT=process.env.PORT || 3000;
+const PORT = process.env.PORT
 
 const app = express();
 app.use(cookieParser())
@@ -21,13 +25,15 @@ app.use(cors({
 
 }))
 
-export const connectDb=async()=>{
-    try{
-        const conn=await mongoose.connect(process.env.MONGODB_URI)
-        console.log(`Successfully connected`,conn.connection.host)
-        startServer();
-    } catch(err){
-        console.log("Error encountered while connecting",err)
+// Middleware to parse JSON request bodies
+app.use(express.json());
+
+export const connectDb = async () => {
+    try {
+        const conn = await mongoose.connect(process.env.MONGODB_URI)
+        console.log(`Successfully connected`, conn.connection.host)
+    } catch (err) {
+        console.log("Error encountered while connecting", err)
     }
 }
 
