@@ -64,8 +64,8 @@ app.use("/", userRouter);
 
 app.get("/demouser", async(req,res)=>{
     let fakeuser = new User({
-        email:"asj@gmail.com",
-        username: "delta-student"
+        email:"alpha@gmail.com",
+        username: "student"
     });
 
     let registredUser= await User.register(fakeuser,"autinicate");

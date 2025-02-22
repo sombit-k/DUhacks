@@ -1,16 +1,8 @@
-import jwt from "jsonwebtoken";
-
-const authMiddleware = (req, res, next) => {
-    const token = req.header("Authorization");
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
-
-    try {
-        const decoded = jwt.verify(token, "process.env.SECRET");
-        req.user = decoded; // Contains userId
-        next();
-    } catch (err) {
-        res.status(401).json({ message: "Invalid token" });
+const isAuthenticated = (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ message: 'You must be logged in to access this resource.' });
     }
-};
-
-export default authMiddleware;
+    next();  // Proceed to the next middleware or route handler if authenticated
+  };
+  
+  export default isAuthenticated
