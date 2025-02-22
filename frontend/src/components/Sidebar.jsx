@@ -7,6 +7,7 @@ import {
   Phone,
   Box,
   AlertTriangle,
+  PlusCircle,
 } from "lucide-react";
 
 function Sidebar({ isVisible }) {
@@ -17,19 +18,9 @@ function Sidebar({ isVisible }) {
       path: "/dashboard",
     },
     {
-      name: "Setting",
-      icon: Settings,
-      path: "/dashboard/settings",
-    },
-    {
-      name: "Profile",
-      icon: User,
-      path: "/dashboard/profile",
-    },
-    {
-      name: "Contact Us",
-      icon: Phone,
-      path: "/dashboard/contact",
+      name: "Add New Product",
+      icon: PlusCircle,
+      path: "/dashboard/new-product",
     },
     {
       name: "Products",
@@ -40,6 +31,21 @@ function Sidebar({ isVisible }) {
       name: "Low Stock Products",
       icon: AlertTriangle,
       path: "/dashboard/low-stock",
+    },
+    {
+      name: "Profile",
+      icon: User,
+      path: "/dashboard/profile",
+    },
+    {
+      name: "Setting",
+      icon: Settings,
+      path: "/dashboard/settings",
+    },
+    {
+      name: "Contact Us",
+      icon: Phone,
+      path: "/dashboard/contact",
     },
   ];
 

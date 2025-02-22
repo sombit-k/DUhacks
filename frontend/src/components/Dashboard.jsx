@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import Chart from "./Chart";
+import Loader from "./utils/Loader";
 
 function Dashboard() {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
@@ -10,12 +12,14 @@ function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-slate-200">
       <Sidebar isVisible={isSidebarVisible} />
       <div className="flex-1 flex flex-col">
         <Header toggleSidebar={toggleSidebar} />
         <main className="p-5">
+          <Chart />
           {/* charts and all products components add here*/}
+          <Loader />
         </main>
       </div>
     </div>

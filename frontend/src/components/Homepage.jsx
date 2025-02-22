@@ -1,6 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import {
+  Heart,
+  ActivitySquare,
+  ClipboardList,
+  Users,
+  Package,
+} from "lucide-react";
 function Home() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-between items-center">
@@ -44,7 +50,7 @@ function Home() {
           </button>
         </Link>
       </header>
-      <main className="flex-1 flex flex-col items-center justify-center text-center">
+      {/* <main className="flex-1 flex flex-col items-center justify-center text-center">
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
           <h1 className="text-4xl font-bold mb-4">
             Hospital <span className="text-green-500">Stock Manager</span>
@@ -60,60 +66,444 @@ function Home() {
             </button>
           </Link>
         </div>
+      </main> */}
+
+      <div class="w-full bg-gradient-to-b from-blue-900 via-blue-800 to-blue-500 px-6 sm:py-20 py-10 font-[sans-serif]">
+        <div class="container mx-auto text-center text-white">
+          <h1 class="text-5xl max-sm:text-3xl font-extrabold leading-tight mb-6">
+            Hospital Inventory Management
+          </h1>
+          <p class="text-lg mb-12">
+            Efficiently track and manage medical supplies, equipment, and
+            medicines in real-time.
+          </p>
+          <button
+            type="button"
+            class="bg-blue-600 text-white text-lg tracking-wide px-8 py-2.5 rounded-full transition duration-300 ease-in-out shadow-lg hover:shadow-xl"
+          >
+            Manage Inventory
+          </button>
+        </div>
+      </div>
+
+      <main>
+        <div class="my-4 font-[sans-serif] max-w-6xl max-md:max-w-md mx-auto">
+          <div class="md:mb-28 mb-12 text-center">
+            <h2 class="text-gray-800 text-3xl font-bold">
+              What our happy client say
+            </h2>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-6 relative">
+            <div class="bg-gradient-to-tr from-[#caf0f8] via-[#ade8f4] to-[#90e0ef] max-w-[65%] h-[145%] w-full -top-16 left-0 right-0 mx-auto rounded-3xl absolute max-md:hidden"></div>
+
+            <div class="h-auto p-6 rounded-2xl mx-auto bg-white relative max-md:shadow-md">
+              <div>
+                <img
+                  src="https://readymadeui.com/profile_2.webp"
+                  class="w-10 h-10 rounded-full"
+                />
+                <h4 class="text-gray-800 text-sm whitespace-nowrap font-bold mt-3">
+                  John Doe
+                </h4>
+                <p class="mt-0.5 text-xs text-gray-600">Founder of Rubik</p>
+              </div>
+              <div class="mt-4">
+                <p class="text-gray-800 text-sm leading-relaxed">
+                  The service was amazing. I never had to wait that long for my
+                  food. The staff was friendly and attentive, and the delivery
+                  was impressively prompt.
+                </p>
+              </div>
+            </div>
+
+            <div class="h-auto p-6 rounded-2xl mx-auto bg-white relative max-md:shadow-md">
+              <div>
+                <img
+                  src="https://readymadeui.com/profile_3.webp"
+                  class="w-10 h-10 rounded-full"
+                />
+                <h4 class="text-gray-800 text-sm whitespace-nowrap font-bold mt-3">
+                  Mark Adair
+                </h4>
+                <p class="mt-0.5 text-xs text-gray-600">Founder of Alpha</p>
+              </div>
+              <div class="mt-4">
+                <p class="text-gray-800 text-sm leading-relaxed">
+                  The service was amazing. I never had to wait that long for my
+                  food. The staff was friendly and attentive, and the delivery
+                  was impressively prompt.
+                </p>
+              </div>
+            </div>
+
+            <div class="h-auto p-6 rounded-2xl mx-auto bg-white relative max-md:shadow-md">
+              <div>
+                <img
+                  src="https://readymadeui.com/profile_4.webp"
+                  class="w-10 h-10 rounded-full"
+                />
+                <h4 class="text-gray-800 text-sm whitespace-nowrap font-bold mt-3">
+                  Simon Konecki
+                </h4>
+                <p class="mt-0.5 text-xs text-gray-600">Founder of Labar</p>
+              </div>
+              <div class="mt-4">
+                <p class="text-gray-800 text-sm leading-relaxed">
+                  The service was amazing. I never had to wait that long for my
+                  food. The staff was friendly and attentive, and the delivery
+                  was impressively prompt.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
-      <section className="bg-white py-16 w-full flex flex-col items-center">
-        <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
-          <div className="text-center">
-            <div className="bg-blue-100 p-4 rounded-full mb-4 inline-block">
-              <span className="text-green-500 text-2xl">📦</span>
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Real-time Tracking</h3>
-            <p className="text-gray-600">
-              Monitor stock levels in real-time to ensure you never run out of
-              essential supplies.
-            </p>
-            <Link to="#">
-              <span className="text-green-500 mt-4 block">Learn more</span>
-            </Link>
+
+      <br />
+      <br />
+      <br />
+
+      <section>
+        <div class="font-sans divide-y rounded-lg max-w-4xl mx-auto px-4">
+          <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-800">
+              Frequently asked questions
+            </h2>
           </div>
-          <div className="text-center">
-            <div className="bg-blue-100 p-4 rounded-full mb-4 inline-block">
-              <span className="text-green-500 text-2xl">🔧</span>
+          <div class="accordion" role="accordion">
+            <button
+              type="button"
+              class="toggle-button w-full text-base outline-none text-left font-semibold py-6 text-blue-600 hover:text-blue-600 flex items-center"
+            >
+              <span class="mr-4">
+                Are there any special discounts or promotions available during
+                the event.
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 42 42"
+                class="w-3 fill-current ml-auto shrink-0"
+              >
+                <path
+                  class="plus hidden"
+                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
+                />
+                <path d="M37.059 16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5h32.118C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" />
+              </svg>
+            </button>
+            <div class="content pb-6 max-h-[1000px] overflow-hidden transition-all duration-300">
+              <p class="text-sm text-gray-600">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                auctor auctor arcu, at fermentum dui. Maecenas vestibulum a
+                turpis in lacinia. Proin aliquam turpis at erat venenatis
+                malesuada. Sed semper, justo vitae consequat fermentum, felis
+                diam posuere ante, sed fermentum quam justo in dui. Nulla
+                facilisi. Nulla aliquam auctor purus, vitae dictum dolor
+                sollicitudin vitae. Sed bibendum purus in efficitur consequat.
+                Fusce et tincidunt arcu. Curabitur ac lacus lectus. Morbi congue
+                facilisis sapien, a semper orci facilisis in.
+              </p>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Customizable Reports</h3>
-            <p className="text-gray-600">
-              Generate detailed reports tailored to your hospital's needs.
-            </p>
-            <Link to="#">
-              <span className="text-green-500 mt-4 block">Learn more</span>
-            </Link>
           </div>
-          <div className="text-center">
-            <div className="bg-blue-100 p-4 rounded-full mb-4 inline-block">
-              <span className="text-green-500 text-2xl">💰</span>
+          <div class="accordion" role="accordion">
+            <button
+              type="button"
+              class="toggle-button w-full text-base outline-none text-left font-semibold py-6 text-gray-800 hover:text-blue-600 flex items-center"
+            >
+              <span class="mr-4">
+                What are the dates and locations for the product launch events?
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 42 42"
+                class="w-3 fill-current ml-auto shrink-0"
+              >
+                <path
+                  class="plus"
+                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
+                />
+                <path d="M37.059 16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5h32.118C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" />
+              </svg>
+            </button>
+            <div class="content invisible max-h-0 overflow-hidden transition-all duration-300">
+              <p class="text-sm text-gray-600">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                auctor auctor arcu, at fermentum dui. Maecenas ongue facilisis
+                sapien, a semper orci facilisis in.
+              </p>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Cost-effective</h3>
-            <p className="text-gray-600">
-              Optimize your inventory to reduce waste and save costs.
-            </p>
-            <Link to="#">
-              <span className="text-green-500 mt-4 block">Learn more</span>
-            </Link>
           </div>
-          <div className="text-center">
-            <div className="bg-blue-100 p-4 rounded-full mb-4 inline-block">
-              <span className="text-green-500 text-2xl">💬</span>
+          <div class="accordion" role="accordion">
+            <button
+              type="button"
+              class="toggle-button w-full text-base outline-none text-left font-semibold py-6 text-gray-800 hover:text-blue-600 flex items-center"
+            >
+              <span class="mr-4">
+                Can I bring a guest with me to the product launch event?
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 42 42"
+                class="w-3 fill-current ml-auto shrink-0"
+              >
+                <path
+                  class="plus"
+                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
+                />
+                <path d="M37.059 16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5h32.118C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" />
+              </svg>
+            </button>
+            <div class="content invisible max-h-0 overflow-hidden transition-all duration-300">
+              <p class="text-sm text-gray-600">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                auctor auctor arcu, at fermentum dui. Maecenas ongue facilisis
+                sapien, a semper orci facilisis in.
+              </p>
             </div>
-            <h3 className="text-xl font-semibold mb-2">24/7 Support</h3>
-            <p className="text-gray-600">
-              Contact us 24 hours a day, 7 days a week for any assistance.
-            </p>
-            <Link to="#">
-              <span className="text-green-500 mt-4 block">Learn more</span>
-            </Link>
+          </div>
+          <div class="accordion" role="accordion">
+            <button
+              type="button"
+              class="toggle-button w-full text-base outline-none text-left font-semibold py-6 text-gray-800 hover:text-blue-600 flex items-center"
+            >
+              <span class="mr-4">How can I register for the event?</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 42 42"
+                class="w-3 fill-current ml-auto shrink-0"
+              >
+                <path
+                  class="plus"
+                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
+                />
+                <path d="M37.059 16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5h32.118C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" />
+              </svg>
+            </button>
+            <div class="content invisible max-h-0 overflow-hidden transition-all duration-300">
+              <p class="text-sm text-gray-600">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                auctor auctor arcu, at fermentum dui. Maecenas ongue facilisis
+                sapien, a semper orci facilisis in.
+              </p>
+            </div>
+          </div>
+          <div class="accordion" role="accordion">
+            <button
+              type="button"
+              class="toggle-button w-full text-base outline-none text-left font-semibold py-6 text-gray-800 hover:text-blue-600 flex items-center"
+            >
+              <span class="mr-4">Is there parking available at the venue?</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 42 42"
+                class="w-3 fill-current ml-auto shrink-0"
+              >
+                <path
+                  class="plus"
+                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
+                />
+                <path d="M37.059 16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5h32.118C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" />
+              </svg>
+            </button>
+            <div class="content invisible max-h-0 overflow-hidden transition-all duration-300">
+              <p class="text-sm text-gray-600">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                auctor auctor arcu, at fermentum dui. Maecenas ongue facilisis
+                sapien, a semper orci facilisis in.
+              </p>
+            </div>
+          </div>
+          <div class="accordion" role="accordion">
+            <button
+              type="button"
+              class="toggle-button w-full text-base outline-none text-left font-semibold py-6 text-gray-800 hover:text-blue-600 flex items-center"
+            >
+              <span class="mr-4">How can I contact the event organizers?</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 42 42"
+                class="w-3 fill-current ml-auto shrink-0"
+              >
+                <path
+                  class="plus"
+                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
+                />
+                <path d="M37.059 16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5h32.118C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" />
+              </svg>
+            </button>
+            <div class="content invisible max-h-0 overflow-hidden transition-all duration-300">
+              <p class="text-sm text-gray-600">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                auctor auctor arcu, at fermentum dui. Maecenas ongue facilisis
+                sapien, a semper orci facilisis in.
+              </p>
+            </div>
           </div>
         </div>
       </section>
+
+      <footer className="w-full font-sans tracking-wide bg-gray-50 px-10 pt-12 pb-6">
+        <div className="flex flex-wrap justify-between gap-10">
+          <div className="max-w-md">
+            <a href="javascript:void(0)" className="flex items-center">
+              <Heart className="w-8 h-8 text-blue-600" />
+              <span className="ml-2 text-xl font-semibold text-gray-800">
+                MediTrack Pro
+              </span>
+            </a>
+            <div className="mt-6">
+              <p className="text-gray-600 leading-relaxed text-sm">
+                MediTrack Pro provides comprehensive inventory management
+                solutions for modern healthcare facilities. Our system ensures
+                accurate tracking of medical supplies, equipment, and
+                pharmaceuticals while maintaining optimal stock levels for
+                quality patient care.
+              </p>
+            </div>
+            <ul className="mt-10 flex space-x-5">
+              <li>
+                <a href="javascript:void(0)">
+                  <ActivitySquare className="w-8 h-8 text-blue-600" />
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div className="flex flex-wrap justify-between w-full mt-10">
+            <div className="max-lg:min-w-[140px]">
+              <h4 className="text-gray-800 font-semibold text-base relative max-sm:cursor-pointer flex items-center">
+                <ClipboardList className="w-4 h-4 mr-2" />
+                Inventory Control
+              </h4>
+              <ul className="mt-6 space-y-4">
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    className="hover:text-gray-800 text-gray-600 text-sm"
+                  >
+                    Stock Management
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    className="hover:text-gray-800 text-gray-600 text-sm"
+                  >
+                    Supply Chain
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    className="hover:text-gray-800 text-gray-600 text-sm"
+                  >
+                    Order Processing
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div className="max-lg:min-w-[140px]">
+              <h4 className="text-gray-800 font-semibold text-base relative max-sm:cursor-pointer flex items-center">
+                <Users className="w-4 h-4 mr-2" />
+                Department Access
+              </h4>
+              <ul className="mt-6 space-y-4">
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    className="hover:text-gray-800 text-gray-600 text-sm"
+                  >
+                    Emergency Room
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    className="hover:text-gray-800 text-gray-600 text-sm"
+                  >
+                    Operating Theater
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    className="hover:text-gray-800 text-gray-600 text-sm"
+                  >
+                    Pharmacy
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div className="max-lg:min-w-[140px]">
+              <h4 className="text-gray-800 font-semibold text-base relative max-sm:cursor-pointer flex items-center">
+                <Package className="w-4 h-4 mr-2" />
+                Resources
+              </h4>
+              <ul className="mt-6 space-y-4">
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    className="hover:text-gray-800 text-gray-600 text-sm"
+                  >
+                    Analytics Dashboard
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    className="hover:text-gray-800 text-gray-600 text-sm"
+                  >
+                    Reports & Metrics
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    className="hover:text-gray-800 text-gray-600 text-sm"
+                  >
+                    Training Materials
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <hr className="mt-10 mb-6 border-gray-300" />
+
+        <div className="flex flex-wrap max-md:flex-col gap-4 w-full justify-between">
+          <ul className="md:flex md:space-x-6 max-md:space-y-2">
+            <li>
+              <a
+                href="javascript:void(0)"
+                className="hover:text-gray-800 text-gray-600 text-sm"
+              >
+                Terms of Service
+              </a>
+            </li>
+            <li>
+              <a
+                href="javascript:void(0)"
+                className="hover:text-gray-800 text-gray-600 text-sm"
+              >
+                Privacy Policy
+              </a>
+            </li>
+            <li>
+              <a
+                href="javascript:void(0)"
+                className="hover:text-gray-800 text-gray-600 text-sm"
+              >
+                HIPAA Compliance
+              </a>
+            </li>
+          </ul>
+          <p className="text-gray-600 text-sm md:ml-auto">
+            © 2025 MediTrack Pro. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
