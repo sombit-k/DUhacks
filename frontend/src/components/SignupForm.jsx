@@ -1,35 +1,34 @@
 import React, { useState } from "react";
 import undrawsvg from "../assets/signup.svg";
 import { useAuthStore } from "../../store/useAuthstore";
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
-const SignupForm=()=> {
-
-  const [formData,setFormData]=useState(
-    {
-      fullName:"",
-      email:"",
-      password:""
-    }
-  )
-  const {signUp,isSigningUp}=useAuthStore()
+const SignupForm = () => {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+  });
+  const { signUp, isSigningUp } = useAuthStore();
 
   const validateForm = () => {
     if (!formData.fullName.trim()) return toast.error("Full name is required");
     if (!formData.email.trim()) return toast.error("Email is required");
-    if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
+    if (!/\S+@\S+\.\S+/.test(formData.email))
+      return toast.error("Invalid email format");
     if (!formData.password) return toast.error("Password is required");
-    if (formData.password.length < 6) return toast.error("Password must be at least 6 characters");
+    if (formData.password.length < 6)
+      return toast.error("Password must be at least 6 characters");
 
     return true;
   };
-  const handleSubmit=(e)=>{
-    e.preventDefault()
-    const success=validateForm()
-    if(success === true) {
-    signUp(formData)// ekhan theke data pathano lagbe********************** tarpor zustand theke backend
+  const handleSubmit = e => {
+    e.preventDefault();
+    const success = validateForm();
+    if (success === true) {
+      signUp(formData); // ekhan theke data pathano lagbe********************** tarpor zustand theke backend
     }
-  }
+  };
   return (
     <div className="flex h-screen">
       {/* Left Pane */}
@@ -60,9 +59,11 @@ const SignupForm=()=> {
                 type="text"
                 id="username"
                 name="username"
-                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
+                className="mt-1 p-2 w-full border rounded-md bg-white text-black focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
                 value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                onChange={e =>
+                  setFormData({ ...formData, fullName: e.target.value })
+                }
               />
             </div>
             <div>
@@ -76,7 +77,11 @@ const SignupForm=()=> {
                 type="text"
                 id="email"
                 name="email"
-                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
+                className="mt-1 p-2 w-full border rounded-md bg-white text-black focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
+                value={formData.email}
+                onChange={e =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
               />
             </div>
             <div>
@@ -90,7 +95,11 @@ const SignupForm=()=> {
                 type="password"
                 id="password"
                 name="password"
-                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
+                className="mt-1 p-2 w-full border rounded-md bg-white text-black focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
+                value={formData.password}
+                onChange={e =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
               />
             </div>
             <div>
@@ -114,6 +123,6 @@ const SignupForm=()=> {
       </div>
     </div>
   );
-}
+};
 
 export default SignupForm;

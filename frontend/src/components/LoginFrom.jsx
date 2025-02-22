@@ -66,23 +66,8 @@ const  LoginForm=()=> {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
-                className="input input-bordered mt-1 p-2 w-full border rounded-md bg-white text-black  focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                className="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
               />
-              <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center justify-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-500" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-500" />
-                  )}
-                </button>
-            </div>
             </div>
             <div className="flex items-center justify-center">
               <button
