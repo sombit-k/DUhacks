@@ -1,5 +1,4 @@
 import daisyui from 'daisyui'
-import shadcn from 'shadcn'
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -10,5 +9,5 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [daisyui,shadcn],
+  plugins: [daisyui],
 };

@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import Homepage from "./components/Homepage";
 import LoginFrom from "./components/LoginFrom";
 import SignupForm from "./components/SignupForm";
+import Dashboard from "./components/Dashboard";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 function App() {
