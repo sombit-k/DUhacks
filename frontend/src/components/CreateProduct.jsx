@@ -11,7 +11,7 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Link } from "react-router-dom";
-import { useInventoryStore } from "store/useInventorystore";
+import { useInventoryStore } from "../../store/useInventorystore";
 
 function CreateProduct() {
   const { addNewInventory } = useInventoryStore();
