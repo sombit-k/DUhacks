@@ -12,10 +12,11 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Link } from "react-router-dom";
 import { useInventoryStore } from "../../store/useInventorystore";
+import { useAuthStore } from "../../store/useAuthstore";
 
 function CreateProduct() {
   const { addNewInventory } = useInventoryStore();
-
+  const {authUser} = useAuthStore();
   const [product, setProduct] = useState({
     name: "",
     description:"",
@@ -53,7 +54,7 @@ function CreateProduct() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    addNewInventory(product);
+    addNewInventory(authUser.uuid,product);
   };
 
   return (
