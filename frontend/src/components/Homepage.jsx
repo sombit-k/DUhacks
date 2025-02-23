@@ -8,9 +8,17 @@ import {
   Package,
 } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthstore";
+import { useState } from "react";
 
 function Home() {
   const { authUser } = useAuthStore();
+
+  const [activeIndex, setActiveIndex] = useState(null);
+
+  // Function to toggle the accordion open/close
+  const handleAccordionToggle = index => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-between items-center">
@@ -54,23 +62,6 @@ function Home() {
           </button>
         </Link>
       </header>
-      {/* <main className="flex-1 flex flex-col items-center justify-center text-center">
-        <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full">
-          <h1 className="text-4xl font-bold mb-4">
-            Hospital <span className="text-green-500">Stock Manager</span>
-          </h1>
-
-          <p className="text-gray-700 mb-8">
-            Efficiently manage and track your hospital's inventory with our
-            comprehensive stock management system.
-          </p>
-          <Link to="/signup">
-            <button className="bg-green-500 text-white px-6 py-3 rounded-full font-semibold">
-              Get started
-            </button>
-          </Link>
-        </div>
-      </main> */}
 
       <div class="w-full bg-gradient-to-b from-blue-900 via-blue-800 to-blue-500 px-6 sm:py-20 py-10 font-[sans-serif]">
         <div class="container mx-auto text-center text-white">
@@ -82,12 +73,12 @@ function Home() {
             medicines in real-time.
           </p>
           <Link to="/signup">
-          <button
-            type="button"
-            class="bg-blue-600 text-white text-lg tracking-wide px-8 py-2.5 rounded-full transition duration-300 ease-in-out shadow-lg hover:shadow-xl"
-          >
-            Manage Inventory
-          </button>
+            <button
+              type="button"
+              class="bg-blue-600 text-white text-lg tracking-wide px-8 py-2.5 rounded-full transition duration-300 ease-in-out shadow-lg hover:shadow-xl"
+            >
+              Manage Inventory
+            </button>
           </Link>
         </div>
       </div>
@@ -170,181 +161,93 @@ function Home() {
       <br />
       <br />
 
-      <section>
-        <div class="font-sans divide-y rounded-lg max-w-4xl mx-auto px-4">
-          <div class="mb-8">
-            <h2 class="text-2xl font-bold text-gray-800">
-              Frequently asked questions
+      <section className="py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-16">
+            <h2 className="text-4xl font-manrope text-center font-bold text-gray-900 leading-[3.25rem]">
+              Frequently Asked Questions
             </h2>
           </div>
-          <div class="accordion" role="accordion">
-            <button
-              type="button"
-              class="toggle-button w-full text-base outline-none text-left font-semibold py-6 text-blue-600 hover:text-blue-600 flex items-center"
-            >
-              <span class="mr-4">
-                Are there any special discounts or promotions available during
-                the event.
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 42 42"
-                class="w-3 fill-current ml-auto shrink-0"
+          <div className="accordion-group">
+            {[
+              {
+                question:
+                  "How do I check the current inventory stock in the hospital?",
+                answer:
+                  "To check the current inventory stock, log into the hospital's inventory management system. Navigate to the 'Inventory' or 'Stock' section, where you can view the available quantities of medical supplies, medicines, and other items.",
+              },
+              {
+                question:
+                  "How can I update inventory records when stock levels change?",
+                answer:
+                  "To update inventory records, access the inventory management system, select the item whose stock level has changed, and enter the new quantity. Make sure to save and verify the updated data. You can also generate inventory reports after updates.",
+              },
+              {
+                question: "What should I do if an item goes out of stock?",
+                answer:
+                  "If an item is out of stock, immediately notify the inventory manager and place an order with suppliers. You can also check alternative suppliers or adjust stock levels accordingly. Make sure to update the system once the stock is replenished.",
+              },
+              {
+                question: "How do I track expired stock in the hospital?",
+                answer:
+                  "To track expired stock, set up an automated reminder in the system to notify you when items near their expiration date. Regularly review inventory reports to remove expired stock, and update the inventory system accordingly.",
+              },
+            ].map((faq, index) => (
+              <div
+                key={index}
+                className="accordion border border-solid border-gray-300 p-4 rounded-xl transition duration-500 accordion-active:bg-indigo-50 accordion-active:border-indigo-600 mb-8 lg:p-4"
               >
-                <path
-                  class="plus hidden"
-                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
-                />
-                <path d="M37.059 16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5h32.118C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" />
-              </svg>
-            </button>
-            <div class="content pb-6 max-h-[1000px] overflow-hidden transition-all duration-300">
-              <p class="text-sm text-gray-600">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                auctor auctor arcu, at fermentum dui. Maecenas vestibulum a
-                turpis in lacinia. Proin aliquam turpis at erat venenatis
-                malesuada. Sed semper, justo vitae consequat fermentum, felis
-                diam posuere ante, sed fermentum quam justo in dui. Nulla
-                facilisi. Nulla aliquam auctor purus, vitae dictum dolor
-                sollicitudin vitae. Sed bibendum purus in efficitur consequat.
-                Fusce et tincidunt arcu. Curabitur ac lacus lectus. Morbi congue
-                facilisis sapien, a semper orci facilisis in.
-              </p>
-            </div>
-          </div>
-          <div class="accordion" role="accordion">
-            <button
-              type="button"
-              class="toggle-button w-full text-base outline-none text-left font-semibold py-6 text-gray-800 hover:text-blue-600 flex items-center"
-            >
-              <span class="mr-4">
-                What are the dates and locations for the product launch events?
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 42 42"
-                class="w-3 fill-current ml-auto shrink-0"
-              >
-                <path
-                  class="plus"
-                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
-                />
-                <path d="M37.059 16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5h32.118C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" />
-              </svg>
-            </button>
-            <div class="content invisible max-h-0 overflow-hidden transition-all duration-300">
-              <p class="text-sm text-gray-600">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                auctor auctor arcu, at fermentum dui. Maecenas ongue facilisis
-                sapien, a semper orci facilisis in.
-              </p>
-            </div>
-          </div>
-          <div class="accordion" role="accordion">
-            <button
-              type="button"
-              class="toggle-button w-full text-base outline-none text-left font-semibold py-6 text-gray-800 hover:text-blue-600 flex items-center"
-            >
-              <span class="mr-4">
-                Can I bring a guest with me to the product launch event?
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 42 42"
-                class="w-3 fill-current ml-auto shrink-0"
-              >
-                <path
-                  class="plus"
-                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
-                />
-                <path d="M37.059 16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5h32.118C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" />
-              </svg>
-            </button>
-            <div class="content invisible max-h-0 overflow-hidden transition-all duration-300">
-              <p class="text-sm text-gray-600">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                auctor auctor arcu, at fermentum dui. Maecenas ongue facilisis
-                sapien, a semper orci facilisis in.
-              </p>
-            </div>
-          </div>
-          <div class="accordion" role="accordion">
-            <button
-              type="button"
-              class="toggle-button w-full text-base outline-none text-left font-semibold py-6 text-gray-800 hover:text-blue-600 flex items-center"
-            >
-              <span class="mr-4">How can I register for the event?</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 42 42"
-                class="w-3 fill-current ml-auto shrink-0"
-              >
-                <path
-                  class="plus"
-                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
-                />
-                <path d="M37.059 16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5h32.118C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" />
-              </svg>
-            </button>
-            <div class="content invisible max-h-0 overflow-hidden transition-all duration-300">
-              <p class="text-sm text-gray-600">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                auctor auctor arcu, at fermentum dui. Maecenas ongue facilisis
-                sapien, a semper orci facilisis in.
-              </p>
-            </div>
-          </div>
-          <div class="accordion" role="accordion">
-            <button
-              type="button"
-              class="toggle-button w-full text-base outline-none text-left font-semibold py-6 text-gray-800 hover:text-blue-600 flex items-center"
-            >
-              <span class="mr-4">Is there parking available at the venue?</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 42 42"
-                class="w-3 fill-current ml-auto shrink-0"
-              >
-                <path
-                  class="plus"
-                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
-                />
-                <path d="M37.059 16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5h32.118C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" />
-              </svg>
-            </button>
-            <div class="content invisible max-h-0 overflow-hidden transition-all duration-300">
-              <p class="text-sm text-gray-600">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                auctor auctor arcu, at fermentum dui. Maecenas ongue facilisis
-                sapien, a semper orci facilisis in.
-              </p>
-            </div>
-          </div>
-          <div class="accordion" role="accordion">
-            <button
-              type="button"
-              class="toggle-button w-full text-base outline-none text-left font-semibold py-6 text-gray-800 hover:text-blue-600 flex items-center"
-            >
-              <span class="mr-4">How can I contact the event organizers?</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 42 42"
-                class="w-3 fill-current ml-auto shrink-0"
-              >
-                <path
-                  class="plus"
-                  d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z"
-                />
-                <path d="M37.059 16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5h32.118C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" />
-              </svg>
-            </button>
-            <div class="content invisible max-h-0 overflow-hidden transition-all duration-300">
-              <p class="text-sm text-gray-600">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                auctor auctor arcu, at fermentum dui. Maecenas ongue facilisis
-                sapien, a semper orci facilisis in.
-              </p>
-            </div>
+                <button
+                  className="accordion-toggle group flex items-center justify-between w-full text-left text-lg font-normal leading-8 text-gray-900 transition duration-500 hover:text-indigo-600 accordion-active:font-medium accordion-active:text-indigo-600"
+                  onClick={() => handleAccordionToggle(index)}
+                >
+                  <h5 className="flex-1">{faq.question}</h5>
+                  <svg
+                    className={`w-6 h-6 text-gray-900 transition duration-500 ${
+                      activeIndex === index ? "hidden" : ""
+                    } group-hover:text-indigo-600`}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6 12H18M12 18V6"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    ></path>
+                  </svg>
+                  <svg
+                    className={`w-6 h-6 text-gray-900 transition duration-500 ${
+                      activeIndex !== index ? "hidden" : ""
+                    } group-hover:text-indigo-600`}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6 12H18"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    ></path>
+                  </svg>
+                </button>
+                <div
+                  className={`accordion-content w-full overflow-hidden transition-all duration-500 ease-in-out ${
+                    activeIndex === index
+                      ? "max-h-[200px] opacity-100"
+                      : "max-h-0 opacity-0"
+                  }`}
+                >
+                  <p className="text-base text-gray-900 font-normal leading-6 mt-2">
+                    {faq.answer}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import { useAuthStore } from "../../store/useAuthstore";
+import React from "react";
+import { Link } from "react-router-dom";
 
 function EditProfile() {
-
-  const { authUser,updateProfile } = useAuthStore();
+  const { authUser, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
   const [password, setPassword] = useState("");
 
-  const handleImageUpload = async (e) => {
+  const handleImageUpload = async e => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -18,11 +17,11 @@ function EditProfile() {
     reader.onload = async () => {
       const base64Image = reader.result;
       setSelectedImg(base64Image);
-      await updateProfile({ password,image:base64Image });
+      await updateProfile({ password, image: base64Image });
     };
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     await updateProfile({ password });
   };
@@ -63,7 +62,7 @@ function EditProfile() {
               className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
               placeholder="Enter new password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
             />
           </div>
           <div className="flex justify-center">
@@ -75,6 +74,13 @@ function EditProfile() {
             </button>
           </div>
         </form>
+        <div className="flex justify-center mt-4">
+          <Link to="/dashboard">
+            <button className="text-blue-600 hover:text-blue-800 font-semibold">
+              Back to Dashboard
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
   );
