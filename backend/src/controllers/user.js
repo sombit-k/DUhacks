@@ -1,6 +1,7 @@
 import User from "../models/user.js";
 import { Strategy as LocalStrategy } from 'passport-local';
 import { generateToken } from "../lib/util.js"; 
+import passport from "passport";
 
 // Passport local strategy setup for login
 passport.use(new LocalStrategy(
@@ -59,16 +60,17 @@ const login = (req, res, next) => {
 
 // Register user
 const register = async (req, res) => {
-  const { email, username, password } = req.body;
+  try {
+    const { email, username, password } = req.body;
 
-  if (!username || !email || !password) {
-    return res.status(400).json({ message: "Please fill up the form" });
-  }
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "Please fill up the form" });
+    }
 
-  const userExists = await User.findOne({ email });
-  if (userExists) {
-    return res.status(400).json({ message: "User already exists" });
-  }
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ message: "User already exists" });
+    }
 
     // Create a new user instance
     const newUser = new User({ email, username });
