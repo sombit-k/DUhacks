@@ -37,7 +37,7 @@ passport.use(new LocalStrategy(
 
 // Middleware to authenticate using passport-local
 const login = (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate('local', async (err, user, info) => {
     if (err) {
       return res.status(401).json({ message: `Authentication failed: ${err.message}` });
     }
@@ -45,7 +45,7 @@ const login = (req, res, next) => {
       return res.status(400).json({ message: info.message || "Invalid credentials" });
     }
 
-    req.login(user, (err) => {
+    req.login(user, async (err) => {
       if (err) {
         return res.status(500).json({ message: `Login failed: ${err.message}` });
       }
@@ -53,14 +53,18 @@ const login = (req, res, next) => {
       // Generate a token here (e.g., JWT or your custom token)
       let token = crypto.randomBytes(20).toString("hex");
       user.token = token;
-      user.save();
+      await user.save();
 
-      // Send the token in the response
-      return res.json({ message: "Login successful", token: token });
+      // Return the user details including the new token
+      const { username, email, uuid, image } = user;
+      return res.json({
+        message: "Login successful",
+        token: token,
+        user: { username, email, uuid, image }, // Include user details
+      });
     });
   })(req, res, next);
 };
-
 
 // Register user
 const register = async (req, res) => {
@@ -75,7 +79,18 @@ const register = async (req, res) => {
     const newUser = new User({ email, username });
     await User.register(newUser, password);
 
-    res.json({ message: "User registered successfully" });
+    // Generate a token after successful registration
+    let token = crypto.randomBytes(20).toString("hex");
+    newUser.token = token;
+    await newUser.save();
+
+    // Return the user details including the new token
+    const { username: newUsername, email: newEmail, uuid, image } = newUser;
+    return res.json({
+      message: "User registered successfully",
+      token: token,
+      user: { username: newUsername, email: newEmail, uuid, image }, // Include user details
+    });
   } catch (e) {
     res.status(500).json({ message: `Something went wrong: ${e.message}` });
   }

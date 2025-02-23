@@ -67,7 +67,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // Use routes for user-related functionality
-app.use("/api/user", userRouter);
+app.use("/", userRouter);
 app.use("/api/inventory", inventoryRoutes);
 
 
