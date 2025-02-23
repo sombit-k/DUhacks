@@ -16,7 +16,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.get("/user/check"); //check if user is logged in----route from backend
       console.log("RES.DATA",res.data);
-      set({ authUser: res.data });
+      set({ authUser: res.data.user });
     } catch (error) {
       console.log("Error in useAuthStore", error);
       set({ authUser: null });

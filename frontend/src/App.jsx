@@ -11,6 +11,7 @@ import ContactUs from "./components/ContactUs";
 import CreateProduct from "./components/CreateProduct";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthstore";
+import LowStockproducts from "./components/LowStockproducts";
 
 const App = () => {
   const { checkAuth, authUser, onlineUsers } = useAuthStore();
@@ -22,7 +23,7 @@ const App = () => {
       <div className="App">
         <Toaster />
         <Routes>
-          <Route path="/" element={<Homepage />} />
+          {/* <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<LoginFrom />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/dashboard" element={<Dashboard />} />
@@ -30,17 +31,19 @@ const App = () => {
           <Route path="/dashboard/profile" element={<UserProfile />} />
           <Route path="/dashboard/contact" element={<ContactUs />} />
           <Route path="/dashboard/new-product" element={<CreateProduct />} />
-          <Route path="/dashboard/low-stock" element={<LowStockproducts />} />
+          <Route path="/dashboard/low-stock" element={<LowStockproducts />} /> */}
 
           {/* testing the routes */}
 
-          {/* <Route path="/" element={<Homepage />} />
+          <Route path="/" element={<Homepage />} />
           <Route path="/login" element={!authUser?<LoginFrom />:<Navigate to ="/dashboard"/>} />
           <Route path="/signup" element={!authUser?<SignupForm />:<Navigate to ="/dashboard"/>} />
           <Route path="/dashboard" element={authUser?<Dashboard />:<Navigate to ="/signup"/>}/>
           <Route path="/dashboard/settings" element={authUser?<EditProfile />:<Navigate to ="/signup"/>} />
           <Route path="/dashboard/profile" element={authUser?<UserProfile />:<Navigate to ="/signup"/>} />
-          <Route path="/dashboard/contact" element={<ContactUs />} /> */}
+          <Route path="/dashboard/contact" element={<ContactUs />} />
+          <Route path="/dashboard/low-stock" element={<LowStockproducts />} />
+          <Route path="/dashboard/new-product" element={<CreateProduct />} />
         </Routes>
       </div>
     </BrowserRouter>
