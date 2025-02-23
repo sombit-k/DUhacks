@@ -13,11 +13,12 @@ export const showAllMedicines = async (req, res) => {
 export const addNewMedicines = async (req, res) => {
     const { name, description, image, category, quantity, expiryDate, price } = req.body;
     const { user_id } = req.params; // Extract userId from URL
-
+    console.log("data sent from frontend: + req.params", req.body);
     try {
         const newMedicine = new Medicine({ name, description, image, category, quantity, expiryDate, price, userId: user_id });
         await newMedicine.save();
         res.status(201).json({ message: "Medicine added", data: newMedicine });
+        console.log("data saved???", req.body);
     } catch (err) {
         res.status(500).json({ message: "Error adding Medicine", error: err });
     }
