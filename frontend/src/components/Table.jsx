@@ -3,10 +3,13 @@ import { Minus, Plus, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthstore";
 import { useInventoryStore } from "../../store/useInventorystore";
 export default function TableDemo() {
+
+
   const { authUser } = useAuthStore();
   //authUser.uuid
   const {inventory,getAllInventory}=useInventoryStore();
   getAllInventory(authUser.uuid)
+  console.log("inventory is: ",inventory);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
