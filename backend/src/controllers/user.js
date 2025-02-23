@@ -1,108 +1,66 @@
-import passport from 'passport';
 import User from "../models/user.js";
-import crypto from 'crypto';
-import { Strategy as LocalStrategy } from 'passport-local';
+import bcrypt from "bcryptjs";
+import asyncHandler from "../middleware/authmiddleware.js";
+import generateToken from "../lib/util.js";
 
-// Passport local strategy setup for login
-passport.use(new LocalStrategy(
-  async (username, password, done) => {
-    try {
-      // Find user by username
-      const user = await User.findOne({ username });
+const login = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
 
-      if (!user) {
-        console.log("User not found");
-        return done(null, false, { message: 'User not found' });
-      }
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
 
-      // Check if password is correct
-      const isPasswordCorrect = await user.comparePassword(password);
-      if (!isPasswordCorrect) {
-        console.log("Invalid password");
-        return done(null, false, { message: 'Invalid password' });
-      }
-
-      // If valid, generate token and save it to the user model
-      let token = crypto.randomBytes(20).toString("hex");
-      user.token = token;
-      await user.save();
-
-      return done(null, user, { message: 'Authentication successful' });
-    } catch (e) {
-      return done(e);
-    }
-  }
-));
-
-
-// Middleware to authenticate using passport-local
-const login = (req, res, next) => {
-  passport.authenticate('local', async (err, user, info) => {
-    if (err) {
-      return res.status(401).json({ message: `Authentication failed: ${err.message}` });
-    }
-    if (!user) {
-      return res.status(400).json({ message: info.message || "Invalid credentials" });
-    }
-
-    req.login(user, async (err) => {
-      if (err) {
-        return res.status(500).json({ message: `Login failed: ${err.message}` });
-      }
-
-      // Generate a token here (e.g., JWT or your custom token)
-      let token = crypto.randomBytes(20).toString("hex");
-      user.token = token;
-      await user.save();
-
-      // Return the user details including the new token
-      const { username, email, uuid, image } = user;
-      return res.json({
-        message: "Login successful",
-        token: token,
-        user: { username, email, uuid, image }, // Include user details
+    if (isPasswordValid) {
+      createToken(res, existingUser._id);
+      return res.status(200).json({
+        _id: existingUser._id,
+        username: existingUser.username,
+        email: existingUser.email,
       });
-    });
-  })(req, res, next);
-};
+      
+    } else {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+  } else {
+    return res.status(400).json({ message: "Invalid email or password" });
+  }
+});
 
-// Register user
-const register = async (req, res) => {
+const register = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
 
-  try {
-    // Check if the username already exists
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
-
-    // Create a new user instance
-    const newUser = new User({ email, username });
-
-    // Register the user with password hashing
-    await User.register(newUser, password);  // This will hash and save the password
-
-    // **Generate a token after successful registration**
-    let token = crypto.randomBytes(20).toString("hex");
-    newUser.token = token; // **Add the token field**
-    
-    // **Save the user after adding the token**
-    await newUser.save();  // **Save the user to the database, including the token**
-
-    // **Return the user details, including the token**
-    const { username: newUsername, email: newEmail, uuid, image } = newUser;
-    return res.json({
-      message: "User registered successfully",
-      token: token,
-      user: { username: newUsername, email: newEmail, uuid, image }, // Include user details
-    });
-  } catch (e) {
-    // Catch and handle errors
-    res.status(500).json({ message: `Something went wrong: ${e.message}` });
+  if (!username || !email || !password) {
+    return res.status(400).json({ message: "Please fill up the form" });
   }
-};
 
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    return res.status(400).json({ message: "User already exists" });
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  const newUser = new User({ username, email, password: hashedPassword });
+
+  try {
+    await newUser.save();
+    // const token = generateToken(newUser._id);
+
+    
+    res.status(201).json({
+      _id: newUser._id,
+      username: newUser.username,
+      email: newUser.email,
+      // token, // Include the token in the response
+    });
+  } catch (error) {
+    res.status(400).json({ message: "Invalid user data" });
+  }
+});
 
 // Logout user
 const logout = (req, res) => {
@@ -114,23 +72,21 @@ const logout = (req, res) => {
   });
 };
 
-
-const check = (req, res) => {
-  // Check if user is logged in
-  if (!req.user) {
-    return res.status(401).json({ message: 'No user logged in' });
+const check = asyncHandler(async (req, res) => {
+  if (!req.user) res.status(401).json({ message: "User not logged in" });
+  const user = await User.findById(req.user._id);
+  if (user) {
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+    });
+  } else {
+    res.status(404).json({ message: "User not found" });
   }
+});
 
-  // Return the logged-in user's information, including image
-  const { username, email, uuid, token, image } = req.user;  // Assuming these fields are in the user schema
-  res.json({
-    user: { username, email, uuid, token, image },  // Add image here
-  });
-};
-
-
-//Update user
-
+// Update user
 const updateUser = async (req, res) => {
   try {
     // Ensure the user is authenticated (Handled by isAuthenticated middleware)
@@ -173,6 +129,4 @@ const updateUser = async (req, res) => {
   }
 };
 
-
-
-export { login, register, logout, check , updateUser};
+export { login, register, logout, check, updateUser };
