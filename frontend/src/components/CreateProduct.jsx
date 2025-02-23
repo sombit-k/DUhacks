@@ -11,8 +11,11 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Link } from "react-router-dom";
+import { useInventoryStore } from "store/useInventorystore";
 
 function CreateProduct() {
+  const { addNewInventory } = useInventoryStore();
+
   const [product, setProduct] = useState({
     name: "",
     image: "",
@@ -38,7 +41,7 @@ function CreateProduct() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    // Add logic to submit the form data to the backend
+    addNewInventory(product);
   };
 
   return (
