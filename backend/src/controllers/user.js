@@ -34,6 +34,7 @@ passport.use(new LocalStrategy(
   }
 ));
 
+
 // Middleware to authenticate using passport-local
 const login = (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
@@ -48,10 +49,18 @@ const login = (req, res, next) => {
       if (err) {
         return res.status(500).json({ message: `Login failed: ${err.message}` });
       }
-      return res.json({ message: "Login successful" });
+
+      // Generate a token here (e.g., JWT or your custom token)
+      let token = crypto.randomBytes(20).toString("hex");
+      user.token = token;
+      user.save();
+
+      // Send the token in the response
+      return res.json({ message: "Login successful", token: token });
     });
   })(req, res, next);
 };
+
 
 // Register user
 const register = async (req, res) => {
@@ -82,8 +91,66 @@ const logout = (req, res) => {
   });
 };
 
+<<<<<<< HEAD
+
+const check = (req, res) => {
+  // Check if user is logged in
+  if (!req.user) {
+    return res.status(401).json({ message: 'No user logged in' });
+  }
+
+  // Return the logged-in user's information, including image
+  const { username, email, uuid, token, image } = req.user;  // Assuming these fields are in the user schema
+  res.json({
+    message: 'User is authenticated',
+    user: { username, email, uuid, token, image },  // Add image here
+  });
+};
+
+
+//Update user
+
+const updateUser = async (req, res) => {
+  try {
+    // Ensure the user is authenticated
+    if (!req.user) {
+      return res.status(401).json({ message: 'You must be logged in to update your profile.' });
+    }
+
+    const { password, image } = req.body;
+
+    // Update the password if provided
+    if (password) {
+      // Using passport-local-mongoose's `setPassword` method to hash and set a new password
+      await req.user.setPassword(password);
+      await req.user.save();  // Save the user with the new password
+    }
+
+    // Update the image if provided
+    if (image) {
+      req.user.image = image; // Update the image field
+      await req.user.save();  // Save the user with the new image
+    }
+
+    // Return updated user information (excluding password)
+    const { username, email, uuid, image: updatedImage } = req.user;
+    return res.json({
+      message: 'User updated successfully',
+      user: { username, email, uuid, image: updatedImage },
+    });
+
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: `Error updating user: ${e.message}` });
+  }
+};
+
+
+export { login, register, logout, check , updateUser};
+=======
 // const check=(req,res)=>{
 //     res.status(200).json(req.user)
 // } edit this. 
 
 export { login, register, logout };
+>>>>>>> 9656c108e977ea6c89bf5f6ff8ba1b64d28cf3c4
