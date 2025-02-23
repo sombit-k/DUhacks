@@ -101,7 +101,6 @@ const check = (req, res) => {
   // Return the logged-in user's information, including image
   const { username, email, uuid, token, image } = req.user;  // Assuming these fields are in the user schema
   res.json({
-    message: 'User is authenticated',
     user: { username, email, uuid, token, image },  // Add image here
   });
 };
