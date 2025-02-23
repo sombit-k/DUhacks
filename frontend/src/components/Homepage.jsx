@@ -7,7 +7,11 @@ import {
   Users,
   Package,
 } from "lucide-react";
+import { useAuthStore } from "../../store/useAuthstore";
+
 function Home() {
+  const { authUser } = useAuthStore();
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-between items-center">
       <header className="w-full bg-white py-4 shadow-md flex justify-between items-center px-8">
@@ -44,8 +48,8 @@ function Home() {
           </svg>
         </Link>
 
-        <Link to="/signup">
-          <button className="text-white bg-green-500 font-semibold rounded-full px-6 py-3">
+        <Link to={authUser?.uuid ? "/dashboard" : "/signup"}>
+          <button className="text-white bg-blue-600 font-semibold rounded-full px-6 py-3">
             Get Started
           </button>
         </Link>
@@ -77,12 +81,14 @@ function Home() {
             Efficiently track and manage medical supplies, equipment, and
             medicines in real-time.
           </p>
+          <Link to="/signup">
           <button
             type="button"
             class="bg-blue-600 text-white text-lg tracking-wide px-8 py-2.5 rounded-full transition duration-300 ease-in-out shadow-lg hover:shadow-xl"
           >
             Manage Inventory
           </button>
+          </Link>
         </div>
       </div>
 

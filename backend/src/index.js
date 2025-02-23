@@ -71,12 +71,3 @@ app.use("/api/user", userRouter);
 app.use("/api/inventory", inventoryRoutes);
 
 
-<<<<<<< HEAD
-app.get("/demouser", async(req,res)=>{
-    let fakeuser = new User({
-        email:"alpha@gmail.com",
-        username: "student"
-    });
-=======
->>>>>>> 9656c108e977ea6c89bf5f6ff8ba1b64d28cf3c4
-
