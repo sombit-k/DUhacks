@@ -18,12 +18,12 @@ function CreateProduct() {
 
   const [product, setProduct] = useState({
     name: "",
+    description:"",
     image: "",
     category: "",
     quantity: 0,
     expiryDate: new Date(),
     price: 0,
-    description: "",
   });
 
   const handleChange = e => {
@@ -31,10 +31,22 @@ function CreateProduct() {
     setProduct({ ...product, [name]: value });
   };
 
-  const handleImageChange = e => {
-    setProduct({ ...product, image: e.target.files[0] });
-  };
+  // const handleImageChange = e => {
+  //   setProduct({ ...product, image: e.target.files[0] });
+  // };
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = async () => {
+      const base64Image = reader.result;
+      setProduct({...product,image:base64Image});
+    };
+  };
   const handleDateChange = date => {
     setProduct({ ...product, expiryDate: date });
   };
