@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAuthStore } from "../../store/useAuthstore";
-import { useState } from "react";
+
 function EditProfile() {
   const { authUser, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
