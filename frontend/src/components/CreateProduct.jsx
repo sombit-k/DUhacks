@@ -8,10 +8,10 @@ import { useAuthStore } from "../../store/useAuthstore";
 
 function CreateProduct() {
   const { addNewInventory } = useInventoryStore();
-  const {authUser} = useAuthStore();
+  const { authUser } = useAuthStore();
   const [product, setProduct] = useState({
     name: "",
-    description:"",
+    description: "",
     image: "",
     category: "",
     quantity: 0,
@@ -24,10 +24,7 @@ function CreateProduct() {
     setProduct({ ...product, [name]: value });
   };
 
-  // const handleImageChange = e => {
-  //   setProduct({ ...product, image: e.target.files[0] });
-  // };
-  const handleImageChange = async (e) => {
+  const handleImageChange = async e => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -37,16 +34,17 @@ function CreateProduct() {
 
     reader.onload = async () => {
       const base64Image = reader.result;
-      setProduct({...product,image:base64Image});
+      setProduct({ ...product, image: base64Image });
     };
   };
+
   const handleDateChange = date => {
     setProduct({ ...product, expiryDate: date });
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    addNewInventory(authUser.uuid,product);
+    addNewInventory(authUser.uuid, product);
   };
 
   return (
