@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-// import Chart from "./Chart";
+import Chart from "./Chart";
 import Loader from "./utils/Loader";
 import TableDemo from "./Table.jsx";
 function Dashboard() {
@@ -17,7 +17,7 @@ function Dashboard() {
       <div className="flex-1 flex flex-col">
         <Header toggleSidebar={toggleSidebar} />
         <main className="p-5">
-          {/* <Chart /> */}
+          <Chart />
           {/* charts and all products components add here*/}
           <Loader />
           <TableDemo />

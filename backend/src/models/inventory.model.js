@@ -11,10 +11,7 @@ const medicineSchema = new Schema({
         required: true
     },
     image: {
-        url: {
-            type: String,
-            required: true
-        }
+        url: String,
     },
     category: {
         type: String,
