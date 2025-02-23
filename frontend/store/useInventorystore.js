@@ -3,9 +3,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios"; 
 import toast from "react-hot-toast";
-import { useAuthStore } from "./useAuthstore";
 
-// const { authUser } = useAuthStore();
 
 
 export const useInventoryStore=create((set,get)=>({
@@ -19,72 +17,72 @@ export const useInventoryStore=create((set,get)=>({
     isDeletingInventory:false,
 
   
-    fetchAllInventory: async () => {
+    getAllInventory: async (userId) => {
       try {
-        const res = await axiosInstance.get("/user/check"); //check if user is logged in----route from backend
-        console.log("RES.DATA",res.data);
-        set({ authUser: res.data });
+      set({ isFetchingInventory: true });
+
+        const res = await axiosInstance.get(`/${userId}/dashboard`);
+        set({ inventory : res.data });
       } catch (error) {
-        console.log("Error in useAuthStore", error);
-        set({ authUser: null });
+        console.log("Error in fetchAllInventory,useInventoryStore", error);
+        set({ inventory: null });
       } finally {
-        set({ isCheckingAuth: false });
+        set({ isFetchingInventory: false });
       }
     },
   
-    signUp: async data => {
-      set({ isSigningUp: true });
+    addNewInventory: async (userId,data) => {//data={form data}
+      set({ isAddingInventory: true });
       try {
-        const res = await axiosInstance.post("/user/register", data);
-        console.log("user info is:", res.data.user)
-        set({ authUser: res.data.user });
-        console.log("signup successful");
+        const res = await axiosInstance.post(`/${userId}/dashboard/newmedicine`, data);
+        console.log("Inventory added successfully");
   
-        toast.success("Account created successfully!");
+        toast.success("Inventory added successfully!");
       } catch (error) {
         toast.error(error.response.data.message);
         console.log(error);
       } finally {
-        set({ isSigningUp: false });
+        set({ isAddingInventory: false });
+      }
+    },
+    getOneInventory: async (userId,medicineId) => {
+      try {
+        set({ isFetchingInventory: true });
+        const res = await axiosInstance.get(`/${userId}/dashboard/${medicineId}`);
+      } catch (error) {
+        console.log("Error in fetchOneInventory,useInventoryStore", error);
+        set({ inventory: null });
+      } finally {
+        set({ isFetchingInventory: false });
       }
     },
   
-    logOut: async () => {
+    updateInventory: async (userId,medicineId,data) => {
+      set({ isUpdatingInventory: true });
       try {
-        await axiosInstance.post("/user/logout");
-        set({ authUser: null });
-        toast.success("Logged out successfully!");
+        const res = await axiosInstance.put(`/${userId}/dashboard/${medicineId}`, data);
+        console.log("Inventory updated successfully");
+        toast.success("Inventory updated successfully!");
       } catch (error) {
         toast.error(error.response.data.message);
         console.log(error);
-      }
-    },
-  
-    logIn: async data => {
-      set({ isLoggingIn: true });
-      try {
-        const res = await axiosInstance.post("/user/login", data); //set routes as backend
-        set({ authUser: res.data });
-        toast.success("Login successfull!");
-      } catch (error) {
-        console.log(error.response);
-        toast.error(error.response.data.message);
       } finally {
-        set({ isLoggingIn: false });
+        set({ isUpdatingInventory: false });
       }
     },
-  
-    updateProfile: async data => {
-      set({isUpdatingProfile:true})
+
+    deleteInventory: async (userId,medicineId) => {
+      set({ isDeletingInventory: true });
       try {
-          const res = await axiosInstance.put("/user/updateuser",data)
-      toast.success("Profile updated successfully")
+        const res = await axiosInstance.delete(`/${userId}/dashboard/${medicineId}`);
+        console.log("Inventory deleted successfully");
+        toast.success("Inventory deleted successfully!");
       } catch (error) {
-          console.log(error)
-          toast.error(error.response.data.message)
-      }
-      finally{
-          set({isUpdatingProfile:false})
+        toast.error(error.response.data.message);
+        console.log(error);
+      } finally {
+        set({ isDeletingInventory: false });
       }
     },
-}))
+  }))
+  

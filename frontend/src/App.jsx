@@ -33,13 +33,13 @@ const App =()=>{
 
           {/* testing the routes */}
 
-          <Route path="/" element={<Homepage />} />
+          {/* <Route path="/" element={<Homepage />} />
           <Route path="/login" element={!authUser?<LoginFrom />:<Navigate to ="/dashboard"/>} />
           <Route path="/signup" element={!authUser?<SignupForm />:<Navigate to ="/dashboard"/>} />
           <Route path="/dashboard" element={authUser?<Dashboard />:<Navigate to ="/signup"/>}/>
           <Route path="/dashboard/settings" element={authUser?<EditProfile />:<Navigate to ="/signup"/>} />
           <Route path="/dashboard/profile" element={authUser?<UserProfile />:<Navigate to ="/signup"/>} />
-          <Route path="/dashboard/contact" element={<ContactUs />} />
+          <Route path="/dashboard/contact" element={<ContactUs />} /> */}
         </Routes>
       </div>
     </BrowserRouter>
