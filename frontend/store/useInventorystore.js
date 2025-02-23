@@ -11,16 +11,15 @@ import { useAuthStore } from "./useAuthstore";
 export const useInventoryStore=create((set,get)=>({
     
     //create functions and states based on backend structures and routes
-    authUser: null, // this will store the authenticated user
+    inventory:{}, // this will store the inventory
 
-    isSigningUp: false, //to show the loading state of signup
+    isFetchingInventory:false,
+    isAddingInventory:false,
+    isUpdatingInventory:false,
+    isDeletingInventory:false,
+
   
-    isLoggingIn: false, //to show the loading state of login
-  
-    isUpdatingProfile: false,
-    isCheckingAuth: true,
-  
-    checkAuth: async () => {
+    fetchAllInventory: async () => {
       try {
         const res = await axiosInstance.get("/user/check"); //check if user is logged in----route from backend
         console.log("RES.DATA",res.data);
