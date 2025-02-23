@@ -70,4 +70,3 @@ passport.deserializeUser(User.deserializeUser());
 app.use("/", userRouter);
 app.use("/api/inventory", inventoryRoutes);
 
-
