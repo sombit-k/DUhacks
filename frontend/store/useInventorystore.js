@@ -31,13 +31,7 @@ export const useInventoryStore = create((set, get) => ({
     addNewInventory: async (userId, data) => { //data={form data}
         set({ isAddingInventory: true });
         try {
-            const res = await axiosInstance.post(`/inventory/${userId}/dashboard/newmedicine`, data);
-            set((state) => ({
-                inventory: {
-                    ...state.inventory,
-                    [res.data.id]: res.data,
-                },
-            }));
+            const res = await axiosInstance.post(`/${userId}/dashboard/newmedicine`, data);
             console.log("Inventory added successfully");
             toast.success("Inventory added successfully!");
         } catch (error) {
