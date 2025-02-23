@@ -71,20 +71,26 @@ const register = async (req, res) => {
   const { email, username, password } = req.body;
 
   try {
+    // Check if the username already exists
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    // Create a new user instance
     const newUser = new User({ email, username });
-    await User.register(newUser, password);
 
-    // Generate a token after successful registration
+    // Register the user with password hashing
+    await User.register(newUser, password);  // This will hash and save the password
+
+    // **Generate a token after successful registration**
     let token = crypto.randomBytes(20).toString("hex");
-    newUser.token = token;
-    await newUser.save();
+    newUser.token = token; // **Add the token field**
+    
+    // **Save the user after adding the token**
+    await newUser.save();  // **Save the user to the database, including the token**
 
-    // Return the user details including the new token
+    // **Return the user details, including the token**
     const { username: newUsername, email: newEmail, uuid, image } = newUser;
     return res.json({
       message: "User registered successfully",
@@ -92,9 +98,11 @@ const register = async (req, res) => {
       user: { username: newUsername, email: newEmail, uuid, image }, // Include user details
     });
   } catch (e) {
+    // Catch and handle errors
     res.status(500).json({ message: `Something went wrong: ${e.message}` });
   }
 };
+
 
 // Logout user
 const logout = (req, res) => {
@@ -125,38 +133,46 @@ const check = (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    // Ensure the user is authenticated
+    // Ensure the user is authenticated (Handled by isAuthenticated middleware)
     if (!req.user) {
-      return res.status(401).json({ message: 'You must be logged in to update your profile.' });
+      return res.status(401).json({ message: "You must be logged in to update your profile." });
     }
 
     const { password, image } = req.body;
+    let updatedFields = {}; // Store fields to update
 
-    // Update the password if provided
+    // Update password if provided
     if (password) {
-      // Using passport-local-mongoose's `setPassword` method to hash and set a new password
       await req.user.setPassword(password);
-      await req.user.save();  // Save the user with the new password
+      updatedFields.password = "updated"; // Mark password as updated (but don't return it)
     }
 
-    // Update the image if provided
+    // Update image if provided
     if (image) {
-      req.user.image = image; // Update the image field
-      await req.user.save();  // Save the user with the new image
+      req.user.image = image;
+      updatedFields.image = image;
     }
 
-    // Return updated user information (excluding password)
+    // Save updates only if something changed
+    if (Object.keys(updatedFields).length > 0) {
+      await req.user.save();
+    } else {
+      return res.status(400).json({ message: "No changes provided." });
+    }
+
+    // Return updated user info (excluding password)
     const { username, email, uuid, image: updatedImage } = req.user;
     return res.json({
-      message: 'User updated successfully',
+      message: "User updated successfully",
       user: { username, email, uuid, image: updatedImage },
     });
 
   } catch (e) {
-    console.error(e);
+    console.error("🔹 Update User Error:", e.message);
     res.status(500).json({ message: `Error updating user: ${e.message}` });
   }
 };
+
 
 
 export { login, register, logout, check , updateUser};
