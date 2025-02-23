@@ -18,7 +18,7 @@ function EditProfile() {
     reader.onload = async () => {
       const base64Image = reader.result;
       setSelectedImg(base64Image);
-      await updateProfile({ image: base64Image, });
+      await updateProfile({ password,image:base64Image });
     };
   };
 
