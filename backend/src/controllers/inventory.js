@@ -68,3 +68,42 @@ export const deleteMedicine = async (req, res) => {
         res.status(500).json({ message: "Error deleting Medicine", error: err });
     }
 };
+
+export const incrementMedicineQuantity = async (req, res) => {
+    const { user_id, medicine_id } = req.params;
+
+    try {
+        const medicine = await Medicine.findOne({ _id: medicine_id, userId: user_id });
+        if (!medicine) {
+            return res.status(404).json({ message: "Medicine not found" });
+        }
+
+        medicine.quantity += 1;
+        await medicine.save();
+        res.json({ message: "Medicine quantity incremented", data: medicine });
+    } catch (err) {
+        res.status(500).json({ message: "Error incrementing Medicine quantity", error: err });
+    }
+};
+
+export const decrementMedicineQuantity = async (req, res) => {
+    const { user_id, medicine_id } = req.params;
+
+    try {
+        const medicine = await Medicine.findOne({ _id: medicine_id, userId: user_id });
+        if (!medicine) {
+            return res.status(404).json({ message: "Medicine not found" });
+        }
+
+        medicine.quantity -= 1;
+
+        if (medicine.quantity < 0) {
+            medicine.quantity = 0;
+        }
+
+        await medicine.save();
+        res.json({ message: "Medicine quantity decremented", data: medicine });
+    } catch (err) {
+        res.status(500).json({ message: "Error decrementing Medicine quantity", error: err });
+    }
+};

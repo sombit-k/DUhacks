@@ -19,4 +19,10 @@ router.put("/:user_id/dashboard/:medicine_id", inventoryController.editMedicine)
 // Delete Medicine by ID
 router.delete("/:user_id/dashboard/:medicine_id", inventoryController.deleteMedicine);
 
+// Increment Medicine Quantity
+router.patch("/:user_id/dashboard/:medicine_id/increment", inventoryController.incrementMedicineQuantity);
+
+// Decrement Medicine Quantity
+router.patch("/:user_id/dashboard/:medicine_id/decrement", inventoryController.decrementMedicineQuantity);
+
 export default router;
