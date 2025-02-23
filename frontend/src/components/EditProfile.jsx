@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import { useAuthStore } from "../../store/useAuthstore";
+import { useState } from "react";
 function EditProfile() {
   const { authUser, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
@@ -43,16 +44,6 @@ function EditProfile() {
               onChange={handleImageUpload}
             />
           </div>
-          {/* <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              New Email
-            </label>
-            <input
-              type="email"
-              className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
-              placeholder="Enter new email"
-            />
-          </div> */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               New Password

@@ -2,56 +2,55 @@ import mongoose from "mongoose";
 import express from "express";
 import dotenv from "dotenv";
 import inventoryRoutes from "./routes/inventoryRoutes.js";
-import passport from 'passport';
-import LocalStrategy from 'passport-local';
-import User from './models/user.js';
-import session from 'express-session';
-import userRouter from './routes/user.js';
-import cookieParser from "cookie-parser"
-import cors from "cors"
+import passport from "passport";
+import LocalStrategy from "passport-local";
+import User from "./models/user.js";
+import session from "express-session";
+import userRouter from "./routes/user.js";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 
-dotenv.config()
-const PORT=process.env.PORT || 3000;
+dotenv.config();
+const PORT = process.env.PORT || 3000;
 
 const app = express();
-app.use(cookieParser())
+app.use(cookieParser());
 
-app.use(cors({
-    origin:"http://localhost:5174",
-    credentials:true
-
-}))
+app.use(
+  cors({
+    origin: "http://localhost:5174",
+    credentials: true,
+  })
+);
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
 export const connectDb = async () => {
-    try {
-        const conn = await mongoose.connect(process.env.MONGODB_URI)
-        console.log(`Successfully connected`, conn.connection.host)
-    } catch (err) {
-        console.log("Error encountered while connecting", err)
-    }
-}
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    console.log(`Successfully connected`, conn.connection.host);
+  } catch (err) {
+    console.log("Error encountered while connecting", err);
+  }
+};
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
 
 connectDb();
- 
 
 const sessionOptions = {
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-    }
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
 };
-
 
 app.use(session(sessionOptions));
 
@@ -69,4 +68,3 @@ passport.deserializeUser(User.deserializeUser());
 // Use routes for user-related functionality
 app.use("/", userRouter);
 app.use("/api/inventory", inventoryRoutes);
-

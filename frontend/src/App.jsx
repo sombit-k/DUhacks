@@ -30,6 +30,7 @@ const App = () => {
           <Route path="/dashboard/settings" element={<EditProfile />} />
           <Route path="/dashboard/profile" element={<UserProfile />} />
           <Route path="/dashboard/contact" element={<ContactUs />} />
+          <Route path="/dashboard/new-product" element={<CreateProduct />} />
 
           {/* testing the routes */}
 
