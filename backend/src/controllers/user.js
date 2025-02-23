@@ -1,34 +1,64 @@
 import User from "../models/user.js";
-import bcrypt from "bcryptjs";
-import asyncHandler from "../middleware/authmiddleware.js";
-import generateToken from "../lib/util.js";
+import { Strategy as LocalStrategy } from 'passport-local';
+import { generateToken } from "../lib/util.js"; 
 
-const login = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+// Passport local strategy setup for login
+passport.use(new LocalStrategy(
+  async (username, password, done) => {
+    try {
+      // Find user by username
+      const user = await User.findOne({ username });
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      existingUser.password
-    );
+      if (!user) {
+        console.log("User not found");
+        return done(null, false, { message: 'User not found' });
+      }
 
-    if (isPasswordValid) {
-      createToken(res, existingUser._id);
-      return res.status(200).json({
-        _id: existingUser._id,
-        username: existingUser.username,
-        email: existingUser.email,
-      });
-    } else {
-      return res.status(400).json({ message: "Invalid email or password" });
+      // Check if password is correct
+      const isPasswordCorrect = await user.comparePassword(password);
+      if (!isPasswordCorrect) {
+        console.log("Invalid password");
+        return done(null, false, { message: 'Invalid password' });
+      }
+
+      return done(null, user, { message: 'Authentication successful' });
+    } catch (e) {
+      return done(e);
     }
-  } else {
-    return res.status(400).json({ message: "Invalid email or password" });
   }
-});
+));
 
-const register = asyncHandler(async (req, res) => {
+// Middleware to authenticate using passport-local
+const login = (req, res, next) => {
+  passport.authenticate("local", async (err, user, info) => {
+    if (err) {
+      return res.status(401).json({ message: `Authentication failed: ${err.message}` });
+    }
+    if (!user) {
+      return res.status(400).json({ message: info.message || "Invalid credentials" });
+    }
+
+    req.login(user, async (err) => {
+      if (err) {
+        return res.status(500).json({ message: `Login failed: ${err.message}` });
+      }
+
+      // Generate JWT and set it in cookie
+      const token = generateToken(user.uuid, res);
+
+      // Return user details (excluding token)
+      const { username, email, uuid, image } = user;
+      return res.json({
+        message: "Login successful",
+        token: token,
+        user: { username, email, uuid, image },
+      });
+    });
+  })(req, res, next);
+};
+
+// Register user
+const register = async (req, res) => {
   const { email, username, password } = req.body;
 
   if (!username || !email || !password) {
@@ -40,25 +70,25 @@ const register = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "User already exists" });
   }
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+    // Create a new user instance
+    const newUser = new User({ email, username });
 
-  const newUser = new User({ username, email, password: hashedPassword });
+    // Register the user with password hashing
+    await User.register(newUser, password); // Hashes and saves password
 
-  try {
-    await newUser.save();
-    // const token = generateToken(newUser._id);
+    // Generate JWT and set it in a secure cookie
+    generateToken(newUser.uuid, res);
 
-    res.status(201).json({
-      _id: newUser._id,
-      username: newUser.username,
-      email: newUser.email,
-      // token, // Include the token in the response
+    // Return user details (excluding token)
+    const { username: newUsername, email: newEmail, uuid, image } = newUser;
+    return res.json({
+      message: "User registered successfully",
+      user: { username: newUsername, email: newEmail, uuid, image },
     });
-  } catch (error) {
-    res.status(400).json({ message: "Invalid user data" });
+  } catch (e) {
+    res.status(500).json({ message: `Something went wrong: ${e.message}` });
   }
-});
+};
 
 // Logout user
 const logout = (req, res) => {
@@ -66,23 +96,23 @@ const logout = (req, res) => {
     if (err) {
       return res.status(500).json({ message: `Logout failed: ${err.message}` });
     }
+    res.clearCookie("jwt"); // Clear the JWT cookie
     res.json({ message: "Logged out successfully" });
   });
 };
 
-const check = asyncHandler(async (req, res) => {
-  if (!req.user) res.status(401).json({ message: "User not logged in" });
-  const user = await User.findById(req.user._id);
-  if (user) {
-    res.json({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-    });
-  } else {
-    res.status(404).json({ message: "User not found" });
+const check = (req, res) => {
+  // Check if user is logged in
+  if (!req.user) {
+    return res.status(401).json({ message: 'No user logged in' });
   }
-});
+
+  // Return the logged-in user's information, including image
+  const { username, email, uuid, image } = req.user;  // Assuming these fields are in the user schema
+  res.json({
+    user: { username, email, uuid, image },  // Add image here
+  });
+};
 
 // Update user
 const updateUser = async (req, res) => {
