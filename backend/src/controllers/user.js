@@ -1,7 +1,7 @@
 import passport from 'passport';
 import User from "../models/user.js";
-import crypto from 'crypto';
 import { Strategy as LocalStrategy } from 'passport-local';
+import { generateToken } from "../lib/util.js"; 
 
 // Passport local strategy setup for login
 passport.use(new LocalStrategy(
@@ -22,11 +22,6 @@ passport.use(new LocalStrategy(
         return done(null, false, { message: 'Invalid password' });
       }
 
-      // If valid, generate token and save it to the user model
-      let token = crypto.randomBytes(20).toString("hex");
-      user.token = token;
-      await user.save();
-
       return done(null, user, { message: 'Authentication successful' });
     } catch (e) {
       return done(e);
@@ -34,10 +29,9 @@ passport.use(new LocalStrategy(
   }
 ));
 
-
 // Middleware to authenticate using passport-local
 const login = (req, res, next) => {
-  passport.authenticate('local', async (err, user, info) => {
+  passport.authenticate("local", async (err, user, info) => {
     if (err) {
       return res.status(401).json({ message: `Authentication failed: ${err.message}` });
     }
@@ -50,17 +44,15 @@ const login = (req, res, next) => {
         return res.status(500).json({ message: `Login failed: ${err.message}` });
       }
 
-      // Generate a token here (e.g., JWT or your custom token)
-      let token = crypto.randomBytes(20).toString("hex");
-      user.token = token;
-      await user.save();
+      // Generate JWT and set it in cookie
+      const token = generateToken(user.uuid, res);
 
-      // Return the user details including the new token
+      // Return user details (excluding token)
       const { username, email, uuid, image } = user;
       return res.json({
         message: "Login successful",
         token: token,
-        user: { username, email, uuid, image }, // Include user details
+        user: { username, email, uuid, image },
       });
     });
   })(req, res, next);
@@ -81,28 +73,21 @@ const register = async (req, res) => {
     const newUser = new User({ email, username });
 
     // Register the user with password hashing
-    await User.register(newUser, password);  // This will hash and save the password
+    await User.register(newUser, password); // Hashes and saves password
 
-    // **Generate a token after successful registration**
-    let token = crypto.randomBytes(20).toString("hex");
-    newUser.token = token; // **Add the token field**
-    
-    // **Save the user after adding the token**
-    await newUser.save();  // **Save the user to the database, including the token**
+    // Generate JWT and set it in a secure cookie
+    generateToken(newUser.uuid, res);
 
-    // **Return the user details, including the token**
+    // Return user details (excluding token)
     const { username: newUsername, email: newEmail, uuid, image } = newUser;
     return res.json({
       message: "User registered successfully",
-      token: token,
-      user: { username: newUsername, email: newEmail, uuid, image }, // Include user details
+      user: { username: newUsername, email: newEmail, uuid, image },
     });
   } catch (e) {
-    // Catch and handle errors
     res.status(500).json({ message: `Something went wrong: ${e.message}` });
   }
 };
-
 
 // Logout user
 const logout = (req, res) => {
@@ -110,10 +95,10 @@ const logout = (req, res) => {
     if (err) {
       return res.status(500).json({ message: `Logout failed: ${err.message}` });
     }
+    res.clearCookie("jwt"); // Clear the JWT cookie
     res.json({ message: "Logged out successfully" });
   });
 };
-
 
 const check = (req, res) => {
   // Check if user is logged in
@@ -122,15 +107,13 @@ const check = (req, res) => {
   }
 
   // Return the logged-in user's information, including image
-  const { username, email, uuid, token, image } = req.user;  // Assuming these fields are in the user schema
+  const { username, email, uuid, image } = req.user;  // Assuming these fields are in the user schema
   res.json({
-    user: { username, email, uuid, token, image },  // Add image here
+    user: { username, email, uuid, image },  // Add image here
   });
 };
 
-
-//Update user
-
+// Update user
 const updateUser = async (req, res) => {
   try {
     // Ensure the user is authenticated (Handled by isAuthenticated middleware)
@@ -173,6 +156,4 @@ const updateUser = async (req, res) => {
   }
 };
 
-
-
-export { login, register, logout, check , updateUser};
+export { login, register, logout, check, updateUser };
