@@ -28,8 +28,8 @@ export const useAuthStore = create((set, get) => ({
   signUp: async data => {
     set({ isSigningUp: true });
     try {
-      const res = await axiosInstance.post("/user/register", data);
-      console.log("user info is:", res.data.user)
+      const res = await axiosInstance.post("/user/register", data); // Ensure this URL is correct
+      console.log("user info is:", res.data.user);
       set({ authUser: res.data.user });
       console.log("signup successful");
 
@@ -44,7 +44,7 @@ export const useAuthStore = create((set, get) => ({
 
   logOut: async () => {
     try {
-      await axiosInstance.post("/user/logout");
+      await axiosInstance.post("/user/logout"); // Ensure this URL is correct
       set({ authUser: null });
       toast.success("Logged out successfully!");
     } catch (error) {
@@ -56,9 +56,9 @@ export const useAuthStore = create((set, get) => ({
   logIn: async data => {
     set({ isLoggingIn: true });
     try {
-      const res = await axiosInstance.post("/user/login", data); //set routes as backend
+      const res = await axiosInstance.post("/user/login", data); // Ensure this URL is correct
       set({ authUser: res.data });
-      toast.success("Login successfull!");
+      toast.success("Login successful!");
     } catch (error) {
       console.log(error.response);
       toast.error(error.response.data.message);
@@ -68,16 +68,15 @@ export const useAuthStore = create((set, get) => ({
   },
 
   updateProfile: async data => {
-    set({isUpdatingProfile:true})
+    set({ isUpdatingProfile: true });
     try {
-        const res = await axiosInstance.put("/user/updateuser",data)
-    toast.success("Profile updated successfully")
+      const res = await axiosInstance.put("/api/user/updateuser", data); // Ensure this URL is correct
+      toast.success("Profile updated successfully");
     } catch (error) {
-        console.log(error)
-        toast.error(error.response.data.message)
-    }
-    finally{
-        set({isUpdatingProfile:false})
+      console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isUpdatingProfile: false });
     }
   },
 }));
