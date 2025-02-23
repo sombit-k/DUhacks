@@ -6,9 +6,15 @@ const medicineSchema = new Schema({
         type: String,
         required: true
     },
-    description: String,
+    description: {
+        type: String,
+        required: true
+    },
     image: {
-        url: String,
+        url: {
+            type: String,
+            required: true
+        }
     },
     category: {
         type: String,
