@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function EditProfile() {
   return (
@@ -46,6 +47,13 @@ function EditProfile() {
             </button>
           </div>
         </form>
+        <div className="flex justify-center mt-4">
+          <Link to="/dashboard">
+            <button className="text-blue-600 hover:text-blue-800 font-semibold">
+              Back to Dashboard
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
   );
