@@ -1,30 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Minus, Plus, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthstore";
 import { useInventoryStore } from "../../store/useInventorystore";
+
 export default function TableDemo() {
-
-
   const { authUser } = useAuthStore();
-  //authUser.uuid
-  const {inventory,getAllInventory}=useInventoryStore();
-  getAllInventory(authUser.uuid)
-  console.log("inventory is: ",inventory);
+  const { inventory, getAllInventory } = useInventoryStore();
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-  // inventory
-  const [products, setProducts] = useState([inventory
-  ]);
 
-  const totalPages = Math.ceil(products.length / itemsPerPage);
-  const currentProducts = products.slice(
+  useEffect(() => {
+    if (authUser) {
+      getAllInventory(authUser.uuid);
+    }
+  }, [authUser, getAllInventory]);
+
+  const totalPages = Math.ceil(inventory.length / itemsPerPage);
+  const currentProducts = inventory.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
   const handleDecrease = index => {
-    const updatedProducts = [...products];
+    const updatedProducts = [...inventory];
     if (updatedProducts[index].quantity > 0) {
       updatedProducts[index].quantity -= 1;
     }
@@ -32,7 +31,7 @@ export default function TableDemo() {
   };
 
   const handleIncrease = index => {
-    const updatedProducts = [...products];
+    const updatedProducts = [...inventory];
     updatedProducts[index].quantity += 1;
     setProducts(updatedProducts);
   };
