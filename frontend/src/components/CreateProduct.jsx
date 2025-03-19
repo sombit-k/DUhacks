@@ -42,9 +42,15 @@ function CreateProduct() {
     setProduct({ ...product, expiryDate: date });
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    addNewInventory(authUser.uuid, product);
+    try {
+      await addNewInventory(authUser.uuid, product);
+      alert("Product added successfully!");
+    } catch (error) {
+      console.error("Error adding product:", error);
+      alert("Failed to add product.");
+    }
   };
 
   return (
@@ -65,6 +71,19 @@ function CreateProduct() {
               onChange={handleChange}
               className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
               placeholder="Enter product name"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              <Package className="inline-block mr-2" /> Description
+            </label>
+            <input
+              type="text"
+              name="description"
+              value={product.description}
+              onChange={handleChange}
+              className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              placeholder="Enter description"
             />
           </div>
           <div className="mb-4">

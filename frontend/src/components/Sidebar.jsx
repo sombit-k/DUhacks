@@ -23,11 +23,6 @@ function Sidebar({ isVisible }) {
       path: "/dashboard/new-product",
     },
     {
-      name: "Products",
-      icon: Box,
-      path: "/dashboard/products",
-    },
-    {
       name: "Low Stock Products",
       icon: AlertTriangle,
       path: "/dashboard/low-stock",

@@ -6,14 +6,20 @@ import { v4 as uuidv4 } from 'uuid';
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-    email:{
-        type:String,
-        require:true
-    },
     uuid: {  
         type: String,
         default: uuidv4,  
         unique: true      
+    },
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    email:{
+        type:String,
+        required:true,
+        unique: true
     },
     image:{
         type:String,

@@ -21,7 +21,6 @@ const isAuthenticated = async (req, res, next) => {
     req.user = user;
     next();
   } catch (e) {
-    
     console.error("🔹 JWT Verification Error:", e.message);
     return res.status(403).json({ message: "Invalid or expired token." });
   }

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
+import { useAuthStore } from "../../store/useAuthstore";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuthStore } from "../../store/useAuthstore"; // Import useAuthStore
+
 
 function EditProfile() {
-  const { authUser, updateProfile } = useAuthStore(); // Use useAuthStore
+  const { authUser, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
   const [password, setPassword] = useState("");
 

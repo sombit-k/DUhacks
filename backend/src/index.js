@@ -11,7 +11,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 dotenv.config();
-const PORT = process.env.PORT || 3001; // Ensure the port number is set to 3001
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(cookieParser());
@@ -67,4 +67,4 @@ passport.deserializeUser(User.deserializeUser());
 
 // Use routes for user-related functionality
 app.use("/api/user", userRouter);
-app.use("/api/inventory", inventoryRoutes);
+app.use("/api/inventory", inventoryRoutes); // Ensure the inventory routes are used
