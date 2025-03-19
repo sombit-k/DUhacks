@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Minus, Plus, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import axios from "axios";
 
 export default function TableDemo() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -85,21 +86,25 @@ export default function TableDemo() {
     currentPage * itemsPerPage
   );
 
-  const handleDecrease = index => {
-    const updatedProducts = [...inventory];
-    if (updatedProducts[index].quantity > 0) {
-      updatedProducts[index].quantity -= 1;
+  const handleDecrease = async (product) => {
+    try {
+      await axios.post(`/api/inventory/${product.userUuid}/medicines/${product.uuid}/decrement`);
+      product.quantity -= 1;
+    } catch (error) {
+      console.error("Error decrementing quantity:", error);
     }
-    // setProducts(updatedProducts); // Uncomment if using state to manage products
   };
 
-  const handleIncrease = index => {
-    const updatedProducts = [...inventory];
-    updatedProducts[index].quantity += 1;
-    // setProducts(updatedProducts); // Uncomment if using state to manage products
+  const handleIncrease = async (product) => {
+    try {
+      await axios.post(`/api/inventory/${product.userUuid}/medicines/${product.uuid}/increment`);
+      product.quantity += 1;
+    } catch (error) {
+      console.error("Error incrementing quantity:", error);
+    }
   };
 
-  const handleShow = product => {
+  const handleShow = (product) => {
     alert(`Showing details for ${product.name}`);
   };
 
@@ -139,13 +144,13 @@ export default function TableDemo() {
               <td className="py-2 px-4 border-b">{product.quantity}</td>
               <td className="py-2 px-4 border-b">
                 <button
-                  onClick={() => handleDecrease(index)}
+                  onClick={() => handleDecrease(product)}
                   className="mr-2 text-red-600"
                 >
                   <Minus />
                 </button>
                 <button
-                  onClick={() => handleIncrease(index)}
+                  onClick={() => handleIncrease(product)}
                   className="mr-2 text-green-600"
                 >
                   <Plus />
