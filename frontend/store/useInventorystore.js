@@ -26,19 +26,19 @@ export const useInventoryStore = create((set, get) => ({
     }
   },
 
-  addNewInventory: async (userId, data) => { //data={form data}
-    set({ isAddingInventory: true });
-    try {
-      const res = await axiosInstance.post(`/api/inventory/${userId}/medicines`, data); // Corrected URL
-      console.log("Inventory added successfully");
-      toast.success("Inventory added successfully!");
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.log(error);
-    } finally {
-      set({ isAddingInventory: false });
-    }
-  },
+    addNewInventory: async (userId, data) => { //data={form data}
+        set({ isAddingInventory: true });
+        try {
+            const res = await axiosInstance.post(`inventory/${userId}/medicines`, data);
+            console.log("Inventory added successfully");
+            toast.success("Inventory added successfully!");
+        } catch (error) {
+            toast.error(error.response.data.message);
+            console.log(error);
+        } finally {
+            set({ isAddingInventory: false });
+        }
+    },
 
   getOneInventory: async (userId, medicineId) => {
     try {
