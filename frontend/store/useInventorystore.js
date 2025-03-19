@@ -17,9 +17,9 @@ export const useInventoryStore = create((set, get) => ({
         try {
             
             set({ isFetchingInventory: true });
-            const res = await axiosInstance.get(`/${userId}/dashboard`);
-            console.log("res: ",res);
+            const res = await axiosInstance.get(`inventory/${userId}/medicines`);
             set({ inventory: res.data });
+
         } catch (error) {
             console.log("Error in fetchAllInventory,useInventoryStore", error);
             set({ inventory: null });
@@ -33,12 +33,13 @@ export const useInventoryStore = create((set, get) => ({
         try {
             const res = await axiosInstance.post(`inventory/${userId}/medicines`, data);
             console.log("Inventory added successfully");
-            toast.success("Inventory added successfully!");
         } catch (error) {
             toast.error(error.response.data.message);
             console.log(error);
         } finally {
             set({ isAddingInventory: false });
+            toast.success("Inventory added successfully!");
+
         }
     },
 
