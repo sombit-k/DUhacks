@@ -3,7 +3,7 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Chart from "./Chart";
 // import Loader from "./utils/Loader";
-// import TableDemo from "./Table.jsx";
+import TableDemo from "./Table.jsx";
 function Dashboard() {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
@@ -20,7 +20,7 @@ function Dashboard() {
           <Chart />
           {/* charts and all products components add here*/}
           {/* <Loader /> */}
-          {/* <TableDemo /> */}
+          <TableDemo />
         </main>
       </div>
     </div>
