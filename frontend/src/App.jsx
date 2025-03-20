@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
-
 import Homepage from "./components/Homepage";
 import LoginFrom from "./components/LoginFrom";
 import SignupForm from "./components/SignupForm";
@@ -11,32 +10,30 @@ import ContactUs from "./components/ContactUs";
 import CreateProduct from "./components/CreateProduct";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthstore";
+import { useInventoryStore } from "../store/useInventorystore";
 import LowStockproducts from "./components/LowStockproducts";
 import ShowProduct from "./components/ShowProduct";
 import EditProduct from "./components/EditProduct";
 
 const App = () => {
-  const { checkAuth, authUser, onlineUsers } = useAuthStore();
+  const { checkAuth, authUser } = useAuthStore();
+  const { getAllInventory } = useInventoryStore();
+
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
+  useEffect(() => {
+    if (authUser) {
+      getAllInventory(authUser.uuid);
+    }
+  }, [authUser, getAllInventory]);
+
   return (
     <BrowserRouter>
       <div className="App">
         <Toaster />
         <Routes>
-          {/* <Route path="/" element={<Homepage />} />
-          <Route path="/login" element={<LoginFrom />} />
-          <Route path="/signup" element={<SignupForm />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/settings" element={<EditProfile />} />
-          <Route path="/dashboard/profile" element={<UserProfile />} />
-          <Route path="/dashboard/contact" element={<ContactUs />} />
-          <Route path="/dashboard/new-product" element={<CreateProduct />} />
-          <Route path="/dashboard/low-stock" element={<LowStockproducts />} /> */}
-
-          {/* testing the routes */}
-
           <Route path="/" element={<Homepage />} />
           <Route
             path="/login"

@@ -1,84 +1,112 @@
-// this will be used to add and fetch inventory from backend.
-
 import { create } from "zustand";
-import { axiosInstance } from "../src/lib/axios"; 
+import { axiosInstance } from "../src/lib/axios"; // Corrected import path
 import toast from "react-hot-toast";
 
 export const useInventoryStore = create((set, get) => ({
-    //create functions and states based on backend structures and routes
-    inventory: {}, // this will store the inventory
+  inventory: [], // Initialize as an array
 
-    isFetchingInventory: false,
-    isAddingInventory: false,
-    isUpdatingInventory: false,
-    isDeletingInventory: false,
+  isFetchingInventory: false,
+  isAddingInventory: false,
+  isUpdatingInventory: false,
+  isDeletingInventory: false,
 
-    getAllInventory: async (userId) => {
-        try {
-            
-            set({ isFetchingInventory: true });
-            const res = await axiosInstance.get(`/${userId}/dashboard`);
-            console.log("res: ",res);
-            set({ inventory: res.data });
-        } catch (error) {
-            console.log("Error in fetchAllInventory,useInventoryStore", error);
-            set({ inventory: null });
-        } finally {
-            set({ isFetchingInventory: false });
-        }
-    },
+  getAllInventory: async (userId) => {
+    try {
+      set({ isFetchingInventory: true });
+      const res = await axiosInstance.get(`/inventory/${userId}/medicines`); // Corrected URL
+      set({ inventory: Array.isArray(res.data) ? res.data : [] }); // Ensure res.data is an array
+    } catch (error) {
+      console.log("Error in fetchAllInventory,useInventoryStore", error);
+      set({ inventory: [] }); // Set as an empty array on error
+    } finally {
+      set({ isFetchingInventory: false });
+    }
+  },
 
-    addNewInventory: async (userId, data) => { //data={form data}
-        set({ isAddingInventory: true });
-        try {
-            const res = await axiosInstance.post(`/${userId}/dashboard/newmedicine`, data);
-            console.log("Inventory added successfully");
-            toast.success("Inventory added successfully!");
-        } catch (error) {
-            toast.error(error.response.data.message);
-            console.log(error);
-        } finally {
-            set({ isAddingInventory: false });
-        }
-    },
+  addNewInventory: async (userId, data) => {
+    set({ isAddingInventory: true });
+    try {
+      const res = await axiosInstance.post(`/inventory/${userId}/medicines`, data); // Corrected URL
+      set((state) => ({ inventory: [...state.inventory, res.data.data] }));
+      toast.success("Inventory added successfully!");
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
+    } finally {
+      set({ isAddingInventory: false });
+    }
+  },
 
-    getOneInventory: async (userId, medicineId) => {
-        try {
-            set({ isFetchingInventory: true });
-            const res = await axiosInstance.get(`/${userId}/dashboard/${medicineId}`);
-        } catch (error) {
-            console.log("Error in fetchOneInventory,useInventoryStore", error);
-            set({ inventory: null });
-        } finally {
-            set({ isFetchingInventory: false });
-        }
-    },
+  getOneInventory: async (userId, medicineId) => {
+    try {
+      set({ isFetchingInventory: true });
+      const res = await axiosInstance.get(`/inventory/${userId}/medicines/${medicineId}`); // Corrected URL
+      set({ inventory: Array.isArray(res.data) ? res.data : [] });
+    } catch (error) {
+      console.log("Error in fetchOneInventory,useInventoryStore", error);
+      set({ inventory: [] });
+    } finally {
+      set({ isFetchingInventory: false });
+    }
+  },
 
-    updateInventory: async (userId, medicineId, data) => {
-        set({ isUpdatingInventory: true });
-        try {
-            const res = await axiosInstance.put(`/${userId}/dashboard/${medicineId}`, data);
-            console.log("Inventory updated successfully");
-            toast.success("Inventory updated successfully!");
-        } catch (error) {
-            toast.error(error.response.data.message);
-            console.log(error);
-        } finally {
-            set({ isUpdatingInventory: false });
-        }
-    },
+  updateInventory: async (userId, medicineId, data) => {
+    set({ isUpdatingInventory: true });
+    try {
+      const res = await axiosInstance.put(`/inventory/${userId}/medicines/${medicineId}`, data); // Corrected URL
+      set((state) => ({
+        inventory: state.inventory.map((item) =>
+          item.uuid === medicineId ? res.data.data : item
+        ),
+      }));
+      toast.success("Inventory updated successfully!");
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
+    } finally {
+      set({ isUpdatingInventory: false });
+    }
+  },
 
-    deleteInventory: async (userId, medicineId) => {
-        set({ isDeletingInventory: true });
-        try {
-            const res = await axiosInstance.delete(`/${userId}/dashboard/${medicineId}`);
-            console.log("Inventory deleted successfully");
-            toast.success("Inventory deleted successfully!");
-        } catch (error) {
-            toast.error(error.response.data.message);
-            console.log(error);
-        } finally {
-            set({ isDeletingInventory: false });
-        }
-    },
+  deleteInventory: async (userId, medicineId) => {
+    set({ isDeletingInventory: true });
+    try {
+      await axiosInstance.delete(`/inventory/${userId}/medicines/${medicineId}`); // Corrected URL
+      set((state) => ({
+        inventory: state.inventory.filter((item) => item.uuid !== medicineId),
+      }));
+      toast.success("Inventory deleted successfully!");
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
+    } finally {
+      set({ isDeletingInventory: false });
+    }
+  },
+
+  incrementMedicineQuantity: async (userId, medicineId) => {
+    try {
+      const res = await axiosInstance.post(`/inventory/${userId}/medicines/${medicineId}/increment`); // Corrected URL
+      set((state) => ({
+        inventory: state.inventory.map((item) =>
+          item.uuid === medicineId ? res.data.data : item
+        ),
+      }));
+    } catch (error) {
+      console.error("Error incrementing quantity:", error);
+    }
+  },
+
+  decrementMedicineQuantity: async (userId, medicineId) => {
+    try {
+      const res = await axiosInstance.post(`/inventory/${userId}/medicines/${medicineId}/decrement`); // Corrected URL
+      set((state) => ({
+        inventory: state.inventory.map((item) =>
+          item.uuid === medicineId ? res.data.data : item
+        ),
+      }));
+    } catch (error) {
+      console.error("Error decrementing quantity:", error);
+    }
+  },
 }));

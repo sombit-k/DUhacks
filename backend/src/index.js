@@ -9,9 +9,10 @@ import session from "express-session";
 import userRouter from "./routes/user.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import bodyParser from "body-parser"; // Import body-parser
 
 dotenv.config();
-const PORT = process.env.PORT || 3001; // Ensure the port number is set to 3001
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(cookieParser());
@@ -23,8 +24,9 @@ app.use(
   })
 );
 
-// Middleware to parse JSON request bodies
-app.use(express.json());
+// Middleware to parse JSON request bodies with increased size limit
+app.use(bodyParser.json({ limit: "50mb" })); // Increase the limit as needed
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true })); // Increase the limit as needed
 
 export const connectDb = async () => {
   try {
@@ -67,4 +69,4 @@ passport.deserializeUser(User.deserializeUser());
 
 // Use routes for user-related functionality
 app.use("/api/user", userRouter);
-app.use("/api/inventory", inventoryRoutes);
+app.use("/api/inventory", inventoryRoutes); // Ensure the inventory routes are used

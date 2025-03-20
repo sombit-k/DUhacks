@@ -1,83 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Minus, Plus, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import { useInventoryStore } from "../../store/useInventorystore";
+import { useAuthStore } from "../../store/useAuthstore";
 
 export default function TableDemo() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const { authUser } = useAuthStore();
+  const { inventory, getAllInventory, incrementMedicineQuantity, decrementMedicineQuantity } = useInventoryStore();
 
-  // Sample data for demonstration
-  const inventory = [
-    {
-      name: "Product 1",
-      price: "$10",
-      category: "Category 1",
-      expiryDate: "2025-12-31",
-      quantity: 10,
-    },
-    {
-      name: "Product 2",
-      price: "$20",
-      category: "Category 2",
-      expiryDate: "2025-11-30",
-      quantity: 5,
-    },
-    {
-      name: "Product 3",
-      price: "$30",
-      category: "Category 3",
-      expiryDate: "2025-10-31",
-      quantity: 8,
-    },
-    {
-      name: "Product 4",
-      price: "$40",
-      category: "Category 4",
-      expiryDate: "2025-09-30",
-      quantity: 12,
-    },
-    {
-      name: "Product 5",
-      price: "$50",
-      category: "Category 5",
-      expiryDate: "2025-08-31",
-      quantity: 7,
-    },
-    {
-      name: "Product 6",
-      price: "$60",
-      category: "Category 6",
-      expiryDate: "2025-07-31",
-      quantity: 3,
-    },
-    {
-      name: "Product 7",
-      price: "$70",
-      category: "Category 7",
-      expiryDate: "2025-06-30",
-      quantity: 9,
-    },
-    {
-      name: "Product 8",
-      price: "$80",
-      category: "Category 8",
-      expiryDate: "2025-05-31",
-      quantity: 4,
-    },
-    {
-      name: "Product 9",
-      price: "$90",
-      category: "Category 9",
-      expiryDate: "2025-04-30",
-      quantity: 6,
-    },
-    {
-      name: "Product 10",
-      price: "$100",
-      category: "Category 10",
-      expiryDate: "2025-03-31",
-      quantity: 11,
-    },
-  ];
+  useEffect(() => {
+    if (authUser) {
+      getAllInventory(authUser.uuid);
+    }
+  }, [authUser, getAllInventory]);
 
   const totalPages = Math.ceil(inventory.length / itemsPerPage);
   const currentProducts = inventory.slice(
@@ -85,22 +21,29 @@ export default function TableDemo() {
     currentPage * itemsPerPage
   );
 
-  const handleDecrease = index => {
-    const updatedProducts = [...inventory];
-    if (updatedProducts[index].quantity > 0) {
-      updatedProducts[index].quantity -= 1;
+  const handleDecrease = async (product) => {
+    try {
+      await decrementMedicineQuantity(authUser.uuid, product.uuid);
+    } catch (error) {
+      console.error("Error decrementing quantity:", error);
     }
-    // setProducts(updatedProducts); // Uncomment if using state to manage products
   };
 
-  const handleIncrease = index => {
-    const updatedProducts = [...inventory];
-    updatedProducts[index].quantity += 1;
-    // setProducts(updatedProducts); // Uncomment if using state to manage products
+  const handleIncrease = async (product) => {
+    try {
+      await incrementMedicineQuantity(authUser.uuid, product.uuid);
+    } catch (error) {
+      console.error("Error incrementing quantity:", error);
+    }
   };
 
-  const handleShow = product => {
+  const handleShow = (product) => {
     alert(`Showing details for ${product.name}`);
+  };
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   return (
@@ -124,8 +67,8 @@ export default function TableDemo() {
           </tr>
         </thead>
         <tbody>
-          {currentProducts.map((product, index) => (
-            <tr key={product.name} className="hover:bg-gray-100">
+          {currentProducts.map((product) => (
+            <tr key={product.uuid} className="hover:bg-gray-100">
               <td className="py-2 px-4 border-b">{product.name}</td>
               <td className="py-2 px-4 border-b hidden md:table-cell">
                 {product.price}
@@ -134,18 +77,18 @@ export default function TableDemo() {
                 {product.category}
               </td>
               <td className="py-2 px-4 border-b hidden md:table-cell">
-                {product.expiryDate}
+                {formatDate(product.expiryDate)}
               </td>
               <td className="py-2 px-4 border-b">{product.quantity}</td>
               <td className="py-2 px-4 border-b">
                 <button
-                  onClick={() => handleDecrease(index)}
+                  onClick={() => handleDecrease(product)}
                   className="mr-2 text-red-600"
                 >
                   <Minus />
                 </button>
                 <button
-                  onClick={() => handleIncrease(index)}
+                  onClick={() => handleIncrease(product)}
                   className="mr-2 text-green-600"
                 >
                   <Plus />
@@ -165,7 +108,7 @@ export default function TableDemo() {
             <td colSpan={6} className="py-2 px-4 border-t">
               <div className="flex justify-between">
                 <button
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
                   className="text-blue-600"
                 >
@@ -176,7 +119,7 @@ export default function TableDemo() {
                 </span>
                 <button
                   onClick={() =>
-                    setCurrentPage(prev => Math.min(prev + 1, totalPages))
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
                   disabled={currentPage === totalPages}
                   className="text-blue-600"

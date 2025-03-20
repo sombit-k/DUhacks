@@ -1,7 +1,7 @@
 import passport from 'passport';
 import User from "../models/user.js";
 import { Strategy as LocalStrategy } from 'passport-local';
-import { generateToken } from "../lib/util.js"; 
+import { generateToken } from "../lib/util.js";
 
 // Passport local strategy setup for login
 passport.use(new LocalStrategy(
@@ -116,35 +116,32 @@ const check = (req, res) => {
 // Update user
 const updateUser = async (req, res) => {
   try {
-    // Ensure the user is authenticated (Handled by isAuthenticated middleware)
     if (!req.user) {
       return res.status(401).json({ message: "You must be logged in to update your profile." });
     }
 
     const { password, image } = req.body;
-    let updatedFields = {}; // Store fields to update
+    let updatedFields = {};
 
-    // Update password if provided
     if (password) {
       await req.user.setPassword(password);
-      updatedFields.password = "updated"; // Mark password as updated (but don't return it)
+      updatedFields.password = "updated";
     }
 
-    // Update image if provided
     if (image) {
       req.user.image = image;
       updatedFields.image = image;
     }
 
-    // Save updates only if something changed
     if (Object.keys(updatedFields).length > 0) {
       await req.user.save();
     } else {
       return res.status(400).json({ message: "No changes provided." });
     }
 
-    // Return updated user info (excluding password)
     const { username, email, uuid, image: updatedImage } = req.user;
+    console.log("Updated user details:", { username, email, uuid, image: updatedImage }); // Print new details
+
     return res.json({
       message: "User updated successfully",
       user: { username, email, uuid, image: updatedImage },

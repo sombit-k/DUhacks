@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Chart from "./Chart";
-// import Loader from "./utils/Loader";
 import TableDemo from "./Table.jsx";
+
 function Dashboard() {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
@@ -18,8 +18,6 @@ function Dashboard() {
         <Header toggleSidebar={toggleSidebar} />
         <main className="p-5">
           <Chart />
-          {/* charts and all products components add here*/}
-          {/* <Loader /> */}
           <TableDemo />
         </main>
       </div>
