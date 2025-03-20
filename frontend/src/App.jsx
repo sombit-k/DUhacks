@@ -12,6 +12,8 @@ import CreateProduct from "./components/CreateProduct";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthstore";
 import LowStockproducts from "./components/LowStockproducts";
+import ShowProduct from "./components/ShowProduct";
+import EditProduct from "./components/EditProduct";
 
 const App = () => {
   const { checkAuth, authUser, onlineUsers } = useAuthStore();
@@ -59,6 +61,8 @@ const App = () => {
           <Route path="/dashboard/contact" element={<ContactUs />} />
           <Route path="/dashboard/low-stock" element={<LowStockproducts />} />
           <Route path="/dashboard/new-product" element={<CreateProduct />} />
+          <Route path="/dashboard/product/:id" element={<ShowProduct />} />
+          <Route path="/dashboard/edit-product/:id" element={<EditProduct />} />
         </Routes>
       </div>
     </BrowserRouter>
