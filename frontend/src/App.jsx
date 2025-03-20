@@ -11,13 +11,16 @@ import ContactUs from "./components/ContactUs";
 import CreateProduct from "./components/CreateProduct";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthstore";
+import { useInventoryStore } from "../store/useInventory";
 import LowStockproducts from "./components/LowStockproducts";
 
 const App = () => {
   const { checkAuth, authUser, onlineUsers } = useAuthStore();
+  const {getAllInventory} = useInventoryStore()
   useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
+    getAllInventory(authUser.uuid)
+  }, [checkAuth,getAllInventory,authUser.uuid]);
   return (
     <BrowserRouter>
       <div className="App">

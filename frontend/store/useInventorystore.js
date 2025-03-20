@@ -12,31 +12,33 @@ export const useInventoryStore = create((set, get) => ({
   isUpdatingInventory: false,
   isDeletingInventory: false,
 
-  getAllInventory: async (userId) => {
-    try {
-      set({ isFetchingInventory: true });
-      const res = await axiosInstance.get(`/api/inventory/${userId}/medicines`); // Corrected URL
-      console.log("res: ", res);
-      set({ inventory: res.data });
-    } catch (error) {
-      console.log("Error in fetchAllInventory,useInventoryStore", error);
-      set({ inventory: null });
-    } finally {
-      set({ isFetchingInventory: false });
-    }
-  },
+    getAllInventory: async (userId) => {
+        try {
+            
+            set({ isFetchingInventory: true });
+            const res = await axiosInstance.get(`inventory/${userId}/medicines`);
+            set({ inventory: res.data });
+
+        } catch (error) {
+            console.log("Error in fetchAllInventory,useInventoryStore", error);
+            set({ inventory: null });
+        } finally {
+            set({ isFetchingInventory: false });
+        }
+    },
 
     addNewInventory: async (userId, data) => { //data={form data}
         set({ isAddingInventory: true });
         try {
             const res = await axiosInstance.post(`inventory/${userId}/medicines`, data);
             console.log("Inventory added successfully");
-            toast.success("Inventory added successfully!");
         } catch (error) {
             toast.error(error.response.data.message);
             console.log(error);
         } finally {
             set({ isAddingInventory: false });
+            toast.success("Inventory added successfully!");
+
         }
     },
 
