@@ -9,6 +9,7 @@ import session from "express-session";
 import userRouter from "./routes/user.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import bodyParser from "body-parser"; // Import body-parser
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -23,8 +24,9 @@ app.use(
   })
 );
 
-// Middleware to parse JSON request bodies
-app.use(express.json());
+// Middleware to parse JSON request bodies with increased size limit
+app.use(bodyParser.json({ limit: "50mb" })); // Increase the limit as needed
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true })); // Increase the limit as needed
 
 export const connectDb = async () => {
   try {

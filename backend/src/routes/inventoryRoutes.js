@@ -13,7 +13,7 @@ import isAuthenticated from "../middleware/authorised.js";
 const router = express.Router();
 
 router.get("/:user_id/medicines", isAuthenticated, showAllMedicines);
-router.post("/:user_id/medicines", isAuthenticated, addNewMedicines); // Corrected URL
+router.post("/:user_id/medicines", isAuthenticated, addNewMedicines);
 router.get("/:user_id/medicines/:medicine_id", isAuthenticated, showIndividualMedicine);
 router.put("/:user_id/medicines/:medicine_id", isAuthenticated, editMedicine);
 router.delete("/:user_id/medicines/:medicine_id", isAuthenticated, deleteMedicine);
