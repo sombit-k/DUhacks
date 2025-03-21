@@ -18,6 +18,8 @@ mongoose
 // Nodemailer Setup
 const transporter = nodemailer.createTransport({
   service: "gmail",
+  secure: true,
+  port: 465,
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
@@ -67,6 +69,6 @@ const checkAndSendReminders = async () => {
 };
 
 // Run the function every 5 seconds
-setInterval(checkAndSendReminders, 5000);
+// setInterval(checkAndSendReminders, 5000);
 
 export default checkAndSendReminders;
