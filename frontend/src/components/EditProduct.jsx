@@ -1,175 +1,177 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useInventoryStore } from "../../store/useInventorystore";
+import { useAuthStore } from "../../store/useAuthstore";
 
 function EditProduct() {
-  // default values
+  const { id } = useParams();
+  const { authUser } = useAuthStore();
+  const { getOneInventory, updateInventory, inventory } = useInventoryStore();
   const [product, setProduct] = useState({
-    name: "Sample Product",
-    description: "This is a sample product description.",
-    image: null,
-    category: "Sample Category",
-    quantity: 10,
-    expiryDate: "2025-12-31",
-    price: 100,
+    name: "",
+    description: "",
+    category: "",
+    quantity: 0,
+    expiryDate: new Date(),
+    price: 0,
+    image: "",
   });
+  const navigate = useNavigate();
 
-  const handleInputChange = e => {
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (authUser) {
+        await getOneInventory(authUser.uuid, id);
+      }
+    };
+    fetchProduct();
+  }, [authUser, getOneInventory, id]);
+
+  useEffect(() => {
+    const foundProduct = inventory.find((item) => item.uuid === id);
+    if (foundProduct) {
+      setProduct(foundProduct);
+    }
+  }, [inventory, id]);
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct(prevProduct => ({
-      ...prevProduct,
-      [name]:
-        name === "quantity" || name === "price" ? parseFloat(value) : value,
-    }));
+    setProduct({ ...product, [name]: value });
   };
 
-  const handleImageUpload = e => {
+  const handleDateChange = (date) => {
+    setProduct({ ...product, expiryDate: date });
+  };
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    setProduct(prevProduct => ({
-      ...prevProduct,
-      image: file,
-    }));
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProduct({ ...product, image: reader.result });
+    };
+    reader.readAsDataURL(file);
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Updated Product:", product);
-    alert("Product details updated successfully!");
+    try {
+      await updateInventory(authUser.uuid, id, product);
+      alert("Product updated successfully!");
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error updating product:", error);
+      alert("Failed to update product.");
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4 text-center">Edit Product</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Name
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-black">
+          Edit Product
+        </h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Product Name
             </label>
             <input
               type="text"
-              id="name"
               name="name"
               value={product.name}
-              onChange={handleInputChange}
-              className="mt-1 p-2 w-full border rounded-md focus:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+              onChange={handleChange}
+              className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              placeholder="Enter product name"
             />
           </div>
-          <div>
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-gray-700"
-            >
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
               Description
             </label>
-            <textarea
-              id="description"
+            <input
+              type="text"
               name="description"
               value={product.description}
-              onChange={handleInputChange}
-              className="mt-1 p-2 w-full border rounded-md focus:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+              onChange={handleChange}
+              className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              placeholder="Enter description"
             />
           </div>
-          <div>
-            <label
-              htmlFor="image"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Upload Image
-            </label>
-            <input
-              type="file"
-              id="image"
-              name="image"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="mt-1 p-2 w-full border rounded-md focus:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
-            />
-            {product.image && (
-              <p className="mt-2 text-sm text-gray-600">
-                Selected file: {product.image.name}
-              </p>
-            )}
-          </div>
-          <div>
-            <label
-              htmlFor="category"
-              className="block text-sm font-medium text-gray-700"
-            >
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
               Category
             </label>
             <input
               type="text"
-              id="category"
               name="category"
               value={product.category}
-              onChange={handleInputChange}
-              className="mt-1 p-2 w-full border rounded-md focus:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+              onChange={handleChange}
+              className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              placeholder="Enter category"
             />
           </div>
-          <div>
-            <label
-              htmlFor="quantity"
-              className="block text-sm font-medium text-gray-700"
-            >
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
               Quantity
             </label>
             <input
               type="number"
-              id="quantity"
               name="quantity"
               value={product.quantity}
-              onChange={handleInputChange}
-              className="mt-1 p-2 w-full border rounded-md focus:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+              onChange={handleChange}
+              className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              placeholder="Enter quantity"
             />
           </div>
-          <div>
-            <label
-              htmlFor="expiryDate"
-              className="block text-sm font-medium text-gray-700"
-            >
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
               Expiry Date
             </label>
             <input
               type="date"
-              id="expiryDate"
               name="expiryDate"
-              value={product.expiryDate}
-              onChange={handleInputChange}
-              className="mt-1 p-2 w-full border rounded-md focus:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+              value={new Date(product.expiryDate).toISOString().split("T")[0]}
+              onChange={(e) => handleDateChange(new Date(e.target.value))}
+              className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
             />
           </div>
-          <div>
-            <label
-              htmlFor="price"
-              className="block text-sm font-medium text-gray-700"
-            >
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
               Price
             </label>
             <input
               type="number"
-              id="price"
               name="price"
               value={product.price}
-              onChange={handleInputChange}
-              className="mt-1 p-2 w-full border rounded-md focus:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+              onChange={handleChange}
+              className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+              placeholder="Enter price"
             />
           </div>
-          <div className="flex justify-between mt-6">
-            <Link
-              to="/dashboard"
-              type="button"
-              className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
-            >
-              Back
-            </Link>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Product Image
+            </label>
+            <input
+              type="file"
+              onChange={handleImageChange}
+              className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+            />
+            {product.image && (
+              <img
+                src={product.image}
+                alt="Product"
+                className="mt-4 w-32 h-32 rounded-full object-cover"
+              />
+            )}
+          </div>
+          <div className="flex justify-center">
             <button
               type="submit"
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
             >
-              Submit
+              Update Product
             </button>
           </div>
         </form>

@@ -41,7 +41,11 @@ export const useInventoryStore = create((set, get) => ({
     try {
       set({ isFetchingInventory: true });
       const res = await axiosInstance.get(`/inventory/${userId}/medicines/${medicineId}`); // Corrected URL
-      set({ inventory: Array.isArray(res.data) ? res.data : [] });
+      set((state) => ({
+        inventory: state.inventory.map((item) =>
+          item.uuid === medicineId ? res.data : item
+        ),
+      }));
     } catch (error) {
       console.log("Error in fetchOneInventory,useInventoryStore", error);
       set({ inventory: [] });

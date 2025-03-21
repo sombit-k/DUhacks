@@ -1,4 +1,5 @@
 import React from "react";
+import { Home } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthstore";
 
@@ -27,9 +28,9 @@ function UserProfile() {
           </Link>
         </div>
         <div className="flex justify-center">
-          <Link to="/dashboard">
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-              Go to Dashboard
+        <Link to="/dashboard">
+            <button className="text-blue-600 hover:text-blue-800 font-semibold">
+              <Home className="inline-block mr-2" /> Back to Dashboard
             </button>
           </Link>
         </div>

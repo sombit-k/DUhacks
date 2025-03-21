@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Minus, Plus, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import { useInventoryStore } from "../../store/useInventorystore";
 import { useAuthStore } from "../../store/useAuthstore";
+import { useNavigate } from "react-router-dom";
 
 export default function TableDemo() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const { authUser } = useAuthStore();
   const { inventory, getAllInventory, incrementMedicineQuantity, decrementMedicineQuantity } = useInventoryStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (authUser) {
@@ -38,7 +40,7 @@ export default function TableDemo() {
   };
 
   const handleShow = (product) => {
-    alert(`Showing details for ${product.name}`);
+    navigate(`/dashboard/product/${product.uuid}`);
   };
 
   const formatDate = (dateString) => {

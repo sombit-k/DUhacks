@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Calendar, Package, DollarSign, Hash, Home } from "lucide-react";
+import { Calendar, Package, DollarSign, Hash, Home, Image } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Link } from "react-router-dom";
@@ -16,6 +16,7 @@ function CreateProduct() {
     quantity: 0,
     expiryDate: new Date(),
     price: 0,
+    image: "",
   });
 
   const handleChange = e => {
@@ -25,6 +26,16 @@ function CreateProduct() {
 
   const handleDateChange = date => {
     setProduct({ ...product, expiryDate: date });
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProduct({ ...product, image: reader.result });
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async e => {
@@ -70,6 +81,23 @@ function CreateProduct() {
               className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
               placeholder="Enter description"
             />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              <Image className="inline-block mr-2" /> Product Image
+            </label>
+            <input
+              type="file"
+              onChange={handleImageChange}
+              className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+            />
+            {product.image && (
+              <img
+                src={product.image}
+                alt="Product"
+                className="mt-4 w-32 h-32 rounded-full object-cover"
+              />
+            )}
           </div>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
@@ -120,6 +148,7 @@ function CreateProduct() {
               placeholder="Enter price"
             />
           </div>
+          
           <div className="flex justify-center">
             <button
               type="submit"
@@ -130,7 +159,7 @@ function CreateProduct() {
           </div>
         </form>
         <div className="flex justify-center mt-4">
-          <Link to="/dashboard">
+        <Link to="/dashboard">
             <button className="text-blue-600 hover:text-blue-800 font-semibold">
               <Home className="inline-block mr-2" /> Back to Dashboard
             </button>

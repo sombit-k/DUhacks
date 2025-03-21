@@ -16,6 +16,10 @@ const medicineSchema = new Schema({
     type: String,
     required: true,
   },
+  image: {
+    type: String,
+    default: "",
+  },
   category: {
     type: String,
     required: true,
@@ -38,6 +42,7 @@ const medicineSchema = new Schema({
     type: String,
     required: true,
   },
+  
 });
 
 const Medicine = mongoose.model("Medicine", medicineSchema);

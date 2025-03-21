@@ -1,32 +1,59 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useInventoryStore } from "../../store/useInventorystore";
+import { useAuthStore } from "../../store/useAuthstore";
 
 function ShowProduct() {
-  // Sample product data
-  const product = {
-    name: "Sample Product",
-    description: "This is a sample product description.",
-    image: {
-      url: "https://media.istockphoto.com/id/901063844/photo/medical-vital-signs-monitor-in-a-hospital.jpg?s=2048x2048&w=is&k=20&c=hJEG51_MqdFO50hLcWENFoLe6VpWlDBhEuKaQ4m7Gjw=",
-    },
-    category: "Sample Category",
-    quantity: 10,
-    expiryDate: "2025-12-31",
-    price: 100,
+  const { id } = useParams();
+  const { authUser } = useAuthStore();
+  const { getOneInventory, inventory, deleteInventory } = useInventoryStore();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (authUser) {
+        await getOneInventory(authUser.uuid, id);
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [authUser, getOneInventory, id]);
+
+  useEffect(() => {
+    const foundProduct = inventory.find((item) => item.uuid === id);
+    setProduct(foundProduct);
+  }, [inventory, id]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
+
+  const handleDelete = async () => {
+    try {
+      await deleteInventory(authUser.uuid, id);
+      setShowDeleteDialog(false);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
   };
 
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
-  const handleDelete = () => {
-    setShowDeleteDialog(false);
-    alert("Product deleted successfully!");
+  const handleEdit = () => {
+    navigate(`/dashboard/edit-product/${id}`);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
         <img
-          src={product.image.url}
+          src={product.image}
           alt={product.name}
           className="w-full h-48 object-cover rounded-md mb-4"
         />
@@ -52,7 +79,10 @@ function ShowProduct() {
           >
             Back
           </Link>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+            onClick={handleEdit}
+          >
             Edit
           </button>
           <button

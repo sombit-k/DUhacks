@@ -13,10 +13,10 @@ export const showAllMedicines = async (req, res) => {
 };
 
 export const addNewMedicines = async (req, res) => {
-  const { name, description, category, quantity, expiryDate, price } = req.body;
+  const { name, description, category, quantity, expiryDate, price, image } = req.body;
   const { user_id } = req.params; // Extract userUuid from URL
   try {
-    const newMedicine = new Medicine({ name, description, category, quantity, expiryDate, price, userUuid: user_id });
+    const newMedicine = new Medicine({ name, description, image, category, quantity, expiryDate, price, userUuid: user_id });
     await newMedicine.save();
     res.status(201).json({ message: "Medicine added", data: newMedicine });
   } catch (err) {
@@ -27,7 +27,7 @@ export const addNewMedicines = async (req, res) => {
 export const showIndividualMedicine = async (req, res) => {
   const { user_id, medicine_id } = req.params;
   try {
-    const medicine = await Medicine.findOne({ _id: medicine_id, userUuid: user_id });
+    const medicine = await Medicine.findOne({ uuid: medicine_id, userUuid: user_id }); // Query by uuid
     if (!medicine) {
       console.log("Medicine not found");
       return res.status(404).json({ message: "Medicine not found" });
@@ -41,11 +41,11 @@ export const showIndividualMedicine = async (req, res) => {
 
 export const editMedicine = async (req, res) => {
   const { user_id, medicine_id } = req.params;
-  const { name, description, category, quantity, expiryDate, price } = req.body;
+  const { name, description, category, quantity, expiryDate, price, image } = req.body;
   try {
     const updatedMedicine = await Medicine.findOneAndUpdate(
-      { _id: medicine_id, userUuid: user_id },
-      { name, description, category, quantity, expiryDate, price },
+      { uuid: medicine_id, userUuid: user_id }, // Query by uuid
+      { name, description, category, quantity, expiryDate, price, image },
       { new: true }
     );
     if (!updatedMedicine) {
@@ -60,7 +60,7 @@ export const editMedicine = async (req, res) => {
 export const deleteMedicine = async (req, res) => {
   const { user_id, medicine_id } = req.params;
   try {
-    const deletedMedicine = await Medicine.findOneAndDelete({ _id: medicine_id, userUuid: user_id });
+    const deletedMedicine = await Medicine.findOneAndDelete({ uuid: medicine_id, userUuid: user_id }); // Query by uuid
     if (!deletedMedicine) {
       return res.status(404).json({ message: "Medicine not found" });
     }
@@ -74,7 +74,7 @@ export const incrementMedicineQuantity = async (req, res) => {
   const { user_id, medicine_id } = req.params;
 
   try {
-    const medicine = await Medicine.findOne({ _id: medicine_id, userUuid: user_id });
+    const medicine = await Medicine.findOne({ uuid: medicine_id, userUuid: user_id }); // Query by uuid
     if (!medicine) {
       return res.status(404).json({ message: "Medicine not found" });
     }
@@ -91,7 +91,7 @@ export const decrementMedicineQuantity = async (req, res) => {
   const { user_id, medicine_id } = req.params;
 
   try {
-    const medicine = await Medicine.findOne({ _id: medicine_id, userUuid: user_id });
+    const medicine = await Medicine.findOne({ uuid: medicine_id, userUuid: user_id }); // Query by uuid
     if (!medicine) {
       return res.status(404).json({ message: "Medicine not found" });
     }
