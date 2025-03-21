@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Minus, Plus, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import { useInventoryStore } from "../../store/useInventorystore";
 import { useAuthStore } from "../../store/useAuthstore";
@@ -95,12 +96,16 @@ export default function TableDemo() {
                 >
                   <Plus />
                 </button>
+                <Link
+                  to={`/dashboard/product/${product.uuid}`}
+                  className="mr-2 text-blue-600">
                 <button
-                  onClick={() => handleShow(product)}
+                onClick={() => getOneInventory(authUser.uuid, product.uuid)}
                   className="text-blue-600"
                 >
                   <Eye />
                 </button>
+                </Link>
               </td>
             </tr>
           ))}

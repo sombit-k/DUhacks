@@ -7,6 +7,7 @@ const medicineSchema = new Schema({
     type: String,
     default: uuidv4,
     unique: true,
+    required: true,
   },
   name: {
     type: String,

@@ -10,6 +10,8 @@ import userRouter from "./routes/user.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import bodyParser from "body-parser"; // Import body-parser
+import Medicine from "./models/inventory.model.js";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -70,3 +72,55 @@ passport.deserializeUser(User.deserializeUser());
 // Use routes for user-related functionality
 app.use("/api/user", userRouter);
 app.use("/api/inventory", inventoryRoutes); // Ensure the inventory routes are used
+
+// Nodemailer Setup
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
+  },
+});
+
+// Function to Check Medicine Stock and Send Email Reminders
+const checkAndSendReminders = async () => {
+  try {
+    console.log("🔍 Checking inventory for zero-stock medicines...");
+
+    // Find medicines where quantity is 0
+    const outOfStockMedicines = await Medicine.find({ quantity: 0 });
+
+    console.log(` Found ${outOfStockMedicines.length} out-of-stock medicines.`);
+
+    if (outOfStockMedicines.length > 0) {
+      for (const medicine of outOfStockMedicines) {
+        console.log(`📦 Checking user for medicine: ${medicine.name}`);
+
+        // Find user by `userUuid`
+        const user = await User.findOne({ uuid: medicine.userUuid });
+
+        if (!user) {
+          console.error(` User not found for medicine: ${medicine.name}`);
+          continue;
+        }
+
+        console.log(`📧 Sending email to: ${user.email}`);
+
+        // Send Email Alert
+        let emailInfo = await transporter.sendMail({
+          from: process.env.EMAIL,
+          to: user.email,
+          subject: "⚠️ Urgent: Medicine Out of Stock Alert",
+          text: `Dear ${user.username},\n\nYour medicine "${medicine.name}" is out of stock. Please restock it as soon as possible.\n\nBest regards,\nYour Inventory Team`,
+        });
+
+        console.log(`✅ Email Sent to ${user.email}:`, emailInfo.messageId);
+      }
+    } else {
+      console.log(" No out-of-stock medicines found.");
+    }
+  } catch (error) {
+    console.error("Error Checking Inventory:", error);
+  }
+};
+setInterval(checkAndSendReminders, 10000); //10s bad firse check hoga ki koi product out of stock he ki nhi

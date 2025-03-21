@@ -1,7 +1,14 @@
 import * as React from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
+import { useInventoryStore } from "../../store/useInventorystore";
 
 export default function Chart() {
+  const { chartData, seriesData } = useInventoryStore(); // Destructure chartData and seriesData from the store
+
+  // Ensure chartData and seriesData are arrays
+  const validatedChartData = Array.isArray(chartData) ? chartData : [];
+  const validatedSeriesData = Array.isArray(seriesData) ? seriesData : [];
+
   return (
     <div className="p-5 shadow-sm border rounded-md bg-white">
       <h2 className="text-2xl font-semibold mb-4 text-center text-black">
@@ -12,20 +19,16 @@ export default function Chart() {
         xAxis={[
           {
             id: "barCategories",
-            data: [
-              "Total Products",
-              "Total Store Value",
-              "Out of Stock Products",
-            ],
+            data: validatedChartData, // Use validatedChartData
             scaleType: "band",
           },
         ]}
         series={[
           {
-            data: [2, 5, 3],
+            data: validatedSeriesData, // Use validatedSeriesData
           },
         ]}
-        width={500}
+        width={1000}
         height={300}
       />
     </div>

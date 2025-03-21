@@ -109,12 +109,14 @@ function ShowProduct() {
               >
                 Cancel
               </button>
+              <Link to="/dashboard">
               <button
                 className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
                 onClick={handleDelete}
               >
                 Delete
               </button>
+              </Link>
             </div>
           </div>
         </div>
