@@ -74,7 +74,7 @@ export const incrementMedicineQuantity = async (req, res) => {
   const { user_id, medicine_id } = req.params;
 
   try {
-    const medicine = await Medicine.findOne({ _id: medicine_id, userUuid: user_id });
+    const medicine = await Medicine.findOne({ uuid: medicine_id, userUuid: user_id });
     if (!medicine) {
       return res.status(404).json({ message: "Medicine not found" });
     }
@@ -91,7 +91,7 @@ export const decrementMedicineQuantity = async (req, res) => {
   const { user_id, medicine_id } = req.params;
 
   try {
-    const medicine = await Medicine.findOne({ _id: medicine_id, userUuid: user_id });
+    const medicine = await Medicine.findOne({ uuid: medicine_id, userUuid: user_id });
     if (!medicine) {
       return res.status(404).json({ message: "Medicine not found" });
     }
