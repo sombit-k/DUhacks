@@ -40,9 +40,11 @@ function ShowProduct() {
           >
             Back
           </Link>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-            Edit
-          </button>
+          <Link to={`/dashboard/edit-product/${product.uuid}`}>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+              Edit
+            </button>
+          </Link>
           <button
             className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
             onClick={() => setShowDeleteDialog(true)}

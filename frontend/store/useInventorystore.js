@@ -23,7 +23,7 @@ export const useInventoryStore = create((set, get) => ({
       const seriesData = res.data.map((item) => item.quantity);
       const lowStockProducts = res.data.filter((item) => item.quantity < 30); 
       set({ chartData, seriesData, lowStockProducts });
-      console.log("lowStockProduct",lowStockProducts);
+      
     } catch (error) {
       set({ inventory: [] }); // Set as an empty array on error
     } finally {
@@ -50,6 +50,8 @@ export const useInventoryStore = create((set, get) => ({
       set({ isFetchingInventory: true });
       const res = await axiosInstance.get(`/inventory/${userId}/medicines/${medicineId}`); 
       set({ oneInventory: res.data});
+      console.log("oneInventory: ",get().oneInventory);
+
     } catch (error) {
       console.log("Error in fetchOneInventory,useInventoryStore", error);
       set({ oneInventory: oneInventory?oneInventory:{} });

@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useInventoryStore } from "../../store/useInventorystore";
+import { useAuthStore } from "../../store/useAuthstore";
 
 function EditProduct() {
   // default values
-  const [product, setProduct] = useState({
-    name: "Sample Product",
-    description: "This is a sample product description.",
-    image: null,
-    category: "Sample Category",
-    quantity: 10,
-    expiryDate: "2025-12-31",
-    price: 100,
-  });
+  const {oneInventory,updateInventory} = useInventoryStore();
+  const {authUser} = useAuthStore();
+  const {name, description, category, quantity, expiryDate, price} = oneInventory;
+  const [product, setProduct] = useState({name, description, category, quantity, expiryDate, price});
+  const navigate = useNavigate();
 
   const handleInputChange = e => {
     const { name, value } = e.target;
@@ -22,18 +20,10 @@ function EditProduct() {
     }));
   };
 
-  const handleImageUpload = e => {
-    const file = e.target.files[0];
-    setProduct(prevProduct => ({
-      ...prevProduct,
-      image: file,
-    }));
-  };
-
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    console.log("Updated Product:", product);
-    alert("Product details updated successfully!");
+    await updateInventory(authUser.uuid, oneInventory.uuid, product);
+    navigate("/dashboard");
   };
 
   return (
@@ -72,27 +62,7 @@ function EditProduct() {
               className="mt-1 p-2 w-full border rounded-md focus:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
             />
           </div>
-          <div>
-            <label
-              htmlFor="image"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Upload Image
-            </label>
-            <input
-              type="file"
-              id="image"
-              name="image"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="mt-1 p-2 w-full border rounded-md focus:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
-            />
-            {product.image && (
-              <p className="mt-2 text-sm text-gray-600">
-                Selected file: {product.image.name}
-              </p>
-            )}
-          </div>
+          
           <div>
             <label
               htmlFor="category"

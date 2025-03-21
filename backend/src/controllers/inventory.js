@@ -25,8 +25,8 @@ export const addNewMedicines = async (req, res) => {
 export const showIndividualMedicine = async (req, res) => {
   const { user_id, medicine_id } = req.params;
   try {
-    const medicine = await Medicine.findOne({ uuid: medicine_id }); 
-  console.log(medicine)
+    const medicine = await Medicine.findOne({ uuid: medicine_id, userUuid: user_id }); // Include userUuid in the query
+    console.log(medicine);
 
     if (!medicine) {
       console.log("Medicine not found");
@@ -44,7 +44,7 @@ export const editMedicine = async (req, res) => {
   const { name, description, category, quantity, expiryDate, price } = req.body;
   try {
     const updatedMedicine = await Medicine.findOneAndUpdate(
-      { uuid: medicine_id, userUuid: user_id }, // Use uuid instead of _id
+      { uuid: medicine_id },
       { name, description, category, quantity, expiryDate, price },
       { new: true }
     );
