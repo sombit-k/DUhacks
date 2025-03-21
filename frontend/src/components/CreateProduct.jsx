@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { Calendar, Package, DollarSign, Hash, Home } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useInventoryStore } from "../../store/useInventorystore";
 import { useAuthStore } from "../../store/useAuthstore";
 
 function CreateProduct() {
   const { addNewInventory } = useInventoryStore();
   const { authUser } = useAuthStore();
+  const navigate = useNavigate();
   const [product, setProduct] = useState({
     name: "",
     description: "",
@@ -31,7 +32,7 @@ function CreateProduct() {
     e.preventDefault();
     try {
       await addNewInventory(authUser.uuid, product);
-      alert("Product added successfully!");
+      navigate("/dashboard"); // Navigate to dashboard
     } catch (error) {
       console.error("Error adding product:", error);
       alert("Failed to add product.");
@@ -121,14 +122,17 @@ function CreateProduct() {
             />
           </div>
           <div className="flex justify-center">
+            
             <button
               type="submit"
               className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
             >
               Add Product
             </button>
+            
           </div>
         </form>
+        
         <div className="flex justify-center mt-4">
           <Link to="/dashboard">
             <button className="text-blue-600 hover:text-blue-800 font-semibold">

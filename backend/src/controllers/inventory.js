@@ -25,7 +25,9 @@ export const addNewMedicines = async (req, res) => {
 export const showIndividualMedicine = async (req, res) => {
   const { user_id, medicine_id } = req.params;
   try {
-    const medicine = await Medicine.findOne({ _id: medicine_id, userUuid: user_id });
+    const medicine = await Medicine.findOne({ uuid: medicine_id }); 
+  console.log(medicine)
+
     if (!medicine) {
       console.log("Medicine not found");
       return res.status(404).json({ message: "Medicine not found" });
@@ -42,7 +44,7 @@ export const editMedicine = async (req, res) => {
   const { name, description, category, quantity, expiryDate, price } = req.body;
   try {
     const updatedMedicine = await Medicine.findOneAndUpdate(
-      { _id: medicine_id, userUuid: user_id },
+      { uuid: medicine_id, userUuid: user_id }, // Use uuid instead of _id
       { name, description, category, quantity, expiryDate, price },
       { new: true }
     );
@@ -58,7 +60,7 @@ export const editMedicine = async (req, res) => {
 export const deleteMedicine = async (req, res) => {
   const { user_id, medicine_id } = req.params;
   try {
-    const deletedMedicine = await Medicine.findOneAndDelete({ _id: medicine_id, userUuid: user_id });
+    const deletedMedicine = await Medicine.findOneAndDelete({ uuid: medicine_id}); // Use uuid instead of _id
     if (!deletedMedicine) {
       return res.status(404).json({ message: "Medicine not found" });
     }
@@ -72,7 +74,7 @@ export const incrementMedicineQuantity = async (req, res) => {
   const { user_id, medicine_id } = req.params;
 
   try {
-    const medicine = await Medicine.findOne({ uuid: medicine_id, userUuid: user_id });
+    const medicine = await Medicine.findOne({ uuid: medicine_id, userUuid: user_id }); // Use uuid instead of _id
     if (!medicine) {
       return res.status(404).json({ message: "Medicine not found" });
     }
@@ -89,7 +91,7 @@ export const decrementMedicineQuantity = async (req, res) => {
   const { user_id, medicine_id } = req.params;
 
   try {
-    const medicine = await Medicine.findOne({ uuid: medicine_id, userUuid: user_id });
+    const medicine = await Medicine.findOne({ uuid: medicine_id, userUuid: user_id }); // Use uuid instead of _id
     if (!medicine) {
       return res.status(404).json({ message: "Medicine not found" });
     }

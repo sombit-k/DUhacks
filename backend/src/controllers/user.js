@@ -91,13 +91,14 @@ const register = async (req, res) => {
 
 // Logout user
 const logout = (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      return res.status(500).json({ message: `Logout failed: ${err.message}` });
-    }
-    res.clearCookie("jwt"); // Clear the JWT cookie
-    res.json({ message: "Logged out successfully" });
-  });
+  try {
+    res.cookie("jwt","",{maxAge:0})
+    res.status(200).json({message:"Logged out successfully"})
+
+} catch (error) {
+    console.log("Error in login router: ",error.message)
+    res.status(500).message({message:"Internal server error"})
+}
 };
 
 const check = (req, res) => {

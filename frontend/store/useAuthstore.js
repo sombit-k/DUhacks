@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 export const useAuthStore = create((set) => ({
   authUser: null, // this will store the authenticated user
-
+  
   isSigningUp: false, // to show the loading state of signup
   isLoggingIn: false, // to show the loading state of login
   isUpdatingProfile: false,

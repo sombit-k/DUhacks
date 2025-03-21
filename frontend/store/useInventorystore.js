@@ -3,9 +3,10 @@ import { axiosInstance } from "../src/lib/axios"; // Corrected import path
 import toast from "react-hot-toast";
 
 export const useInventoryStore = create((set, get) => ({
-  inventory: [], // Initialize as an array
+  inventory: [],
   chartData: [],
   seriesData :{},
+  oneInventory:{},
 
   isFetchingInventory: false,
   isAddingInventory: false,
@@ -44,11 +45,11 @@ export const useInventoryStore = create((set, get) => ({
   getOneInventory: async (userId, medicineId) => {
     try {
       set({ isFetchingInventory: true });
-      const res = await axiosInstance.get(`/inventory/${userId}/medicines/${medicineId}`); // Corrected URL
-      set({ inventory: Array.isArray(res.data) ? res.data : [] });
+      const res = await axiosInstance.get(`/inventory/${userId}/medicines/${medicineId}`); 
+      set({ oneInventory: res.data});
     } catch (error) {
       console.log("Error in fetchOneInventory,useInventoryStore", error);
-      set({ inventory: [] });
+      set({ oneInventory: oneInventory?oneInventory:{} });
     } finally {
       set({ isFetchingInventory: false });
     }
@@ -80,6 +81,7 @@ export const useInventoryStore = create((set, get) => ({
       set((state) => ({
         inventory: state.inventory.filter((item) => item.uuid !== medicineId),
       }));
+      set({oneInventory:{}});
       toast.success("Inventory deleted successfully!");
     } catch (error) {
       toast.error(error.response.data.message);

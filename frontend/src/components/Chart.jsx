@@ -29,7 +29,7 @@ export default function Chart() {
           },
         ]}
         width={1000}
-        height={200}
+        height={300}
       />
     </div>
   );

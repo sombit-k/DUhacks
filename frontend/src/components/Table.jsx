@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Minus, Plus, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import { useInventoryStore } from "../../store/useInventorystore";
 import { useAuthStore } from "../../store/useAuthstore";
@@ -7,7 +8,7 @@ export default function TableDemo() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const { authUser } = useAuthStore();
-  const { inventory, getAllInventory, incrementMedicineQuantity, decrementMedicineQuantity } = useInventoryStore();
+  const { inventory, getAllInventory, incrementMedicineQuantity, decrementMedicineQuantity,getOneInventory } = useInventoryStore();
 
   useEffect(() => {
     if (authUser) {
@@ -93,12 +94,16 @@ export default function TableDemo() {
                 >
                   <Plus />
                 </button>
+                <Link
+                  to={`/dashboard/product/${product.uuid}`}
+                  className="mr-2 text-blue-600">
                 <button
-                  onClick={() => handleShow(product)}
+                onClick={() => getOneInventory(authUser.uuid, product.uuid)}
                   className="text-blue-600"
                 >
                   <Eye />
                 </button>
+                </Link>
               </td>
             </tr>
           ))}

@@ -1,35 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useInventoryStore } from "../../store/useInventorystore";
+import { useAuthStore } from "../../store/useAuthstore";
 
 function ShowProduct() {
-  // Sample product data
-  const product = {
-    name: "Sample Product",
-    description: "This is a sample product description.",
-    image: {
-      url: "https://media.istockphoto.com/id/901063844/photo/medical-vital-signs-monitor-in-a-hospital.jpg?s=2048x2048&w=is&k=20&c=hJEG51_MqdFO50hLcWENFoLe6VpWlDBhEuKaQ4m7Gjw=",
-    },
-    category: "Sample Category",
-    quantity: 10,
-    expiryDate: "2025-12-31",
-    price: 100,
-  };
-
+  const { oneInventory, deleteInventory } = useInventoryStore();
+  const { authUser } = useAuthStore();
+  const product = oneInventory;
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  
 
   const handleDelete = () => {
     setShowDeleteDialog(false);
-    alert("Product deleted successfully!");
+    deleteInventory(authUser.uuid, product.uuid);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
-        <img
-          src={product.image.url}
-          alt={product.name}
-          className="w-full h-48 object-cover rounded-md mb-4"
-        />
         <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
         <p className="text-gray-700 mb-4">{product.description}</p>
         <p className="text-gray-600">
@@ -79,12 +67,14 @@ function ShowProduct() {
               >
                 Cancel
               </button>
+              <Link to="/dashboard">
               <button
                 className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
                 onClick={handleDelete}
               >
                 Delete
               </button>
+              </Link>
             </div>
           </div>
         </div>

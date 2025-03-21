@@ -1,11 +1,9 @@
 import React from "react";
 import { SearchIcon, BellIcon, MenuIcon } from "lucide-react";
-
+import { useAuthStore } from "../../store/useAuthstore";
 function Header({ toggleSidebar }) {
-  const handleLogout = () => {
-    // Logout logic here
-    console.log("Logout clicked");
-  };
+  const { logOut } = useAuthStore();
+
 
   return (
     <div className="p-5 shadow-sm border-b-2 flex justify-between items-center bg-white w-full">
@@ -21,7 +19,7 @@ function Header({ toggleSidebar }) {
       <div className="flex gap-5 items-center">
         <BellIcon className="h-6 w-6 cursor-pointer" />
         <button
-          onClick={handleLogout}
+          onClick={logOut}
           className="bg-red-500 text-white p-2 rounded-md hover:bg-red-700 transition-colors duration-300"
         >
           Logout
