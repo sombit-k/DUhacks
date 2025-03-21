@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 
 export const useInventoryStore = create((set, get) => ({
   inventory: [], // Initialize as an array
+  chartData: [],
+  seriesData :{},
 
   isFetchingInventory: false,
   isAddingInventory: false,
@@ -15,8 +17,10 @@ export const useInventoryStore = create((set, get) => ({
       set({ isFetchingInventory: true });
       const res = await axiosInstance.get(`/inventory/${userId}/medicines`); // Corrected URL
       set({ inventory: Array.isArray(res.data) ? res.data : [] }); // Ensure res.data is an array
+      const chartData = res.data.map((item) => item.name);
+      const seriesData = res.data.map((item) => item.quantity);
+      set({ chartData, seriesData });
     } catch (error) {
-      console.log("Error in fetchAllInventory,useInventoryStore", error);
       set({ inventory: [] }); // Set as an empty array on error
     } finally {
       set({ isFetchingInventory: false });
@@ -31,9 +35,9 @@ export const useInventoryStore = create((set, get) => ({
       toast.success("Inventory added successfully!");
     } catch (error) {
       toast.error(error.response.data.message);
-      console.log(error);
     } finally {
       set({ isAddingInventory: false });
+      await get().getAllInventory(userId); // Ensure updated values
     }
   },
 
@@ -65,6 +69,7 @@ export const useInventoryStore = create((set, get) => ({
       console.log(error);
     } finally {
       set({ isUpdatingInventory: false });
+      await get().getAllInventory(userId); // Ensure updated values
     }
   },
 
@@ -81,6 +86,7 @@ export const useInventoryStore = create((set, get) => ({
       console.log(error);
     } finally {
       set({ isDeletingInventory: false });
+      await get().getAllInventory(userId); // Ensure updated values
     }
   },
 
@@ -94,6 +100,8 @@ export const useInventoryStore = create((set, get) => ({
       }));
     } catch (error) {
       console.error("Error incrementing quantity:", error);
+    } finally {
+      await get().getAllInventory(userId); // Ensure updated values
     }
   },
 
@@ -107,6 +115,9 @@ export const useInventoryStore = create((set, get) => ({
       }));
     } catch (error) {
       console.error("Error decrementing quantity:", error);
+    } finally {
+      await get().getAllInventory(userId); // Ensure updated values
     }
   },
+
 }));

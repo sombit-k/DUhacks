@@ -2,11 +2,9 @@ import Medicine from "../models/inventory.model.js";
 
 export const showAllMedicines = async (req, res) => {
   const { user_id } = req.params;
-  console.log("came in backend", user_id);
   try {
     const medicines = await Medicine.find({ userUuid: user_id });
     res.json(medicines);
-    console.log("medicines in backend", medicines);
   } catch (err) {
     res.status(500).json({ message: "Error fetching medicines", error: err });
   }
