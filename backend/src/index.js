@@ -76,8 +76,6 @@ app.use("/api/inventory", inventoryRoutes); // Ensure the inventory routes are u
 // Nodemailer Setup
 const transporter = nodemailer.createTransport({
   service: "gmail",
-  secure: true,
-  port: 465,
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
