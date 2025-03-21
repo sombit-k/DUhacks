@@ -7,6 +7,7 @@ export const useInventoryStore = create((set, get) => ({
   chartData: [],
   seriesData :{},
   oneInventory:{},
+  lowStockProducts:[],
 
   isFetchingInventory: false,
   isAddingInventory: false,
@@ -20,7 +21,9 @@ export const useInventoryStore = create((set, get) => ({
       set({ inventory: Array.isArray(res.data) ? res.data : [] }); // Ensure res.data is an array
       const chartData = res.data.map((item) => item.name);
       const seriesData = res.data.map((item) => item.quantity);
-      set({ chartData, seriesData });
+      const lowStockProducts = res.data.filter((item) => item.quantity < 30); 
+      set({ chartData, seriesData, lowStockProducts });
+      console.log("lowStockProduct",lowStockProducts);
     } catch (error) {
       set({ inventory: [] }); // Set as an empty array on error
     } finally {

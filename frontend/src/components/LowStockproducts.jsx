@@ -1,62 +1,7 @@
 import React, { useState, useEffect } from "react";
-
+import { useInventoryStore } from "../../store/useInventorystore";
 function LowStockproducts() {
-  const [products, setProducts] = useState([
-    {
-      name: "Product 1",
-      price: "$250.00",
-      category: "Category 1",
-      expiryDate: "2025-12-31",
-      quantity: 10,
-    },
-    {
-      name: "Product 2",
-      price: "$150.00",
-      category: "Category 2",
-      expiryDate: "2025-11-30",
-      quantity: 5,
-    },
-    {
-      name: "Product 3",
-      price: "$350.00",
-      category: "Category 3",
-      expiryDate: "2025-10-31",
-      quantity: 8,
-    },
-    {
-      name: "Product 4",
-      price: "$450.00",
-      category: "Category 4",
-      expiryDate: "2025-09-30",
-      quantity: 12,
-    },
-    {
-      name: "Product 5",
-      price: "$550.00",
-      category: "Category 5",
-      expiryDate: "2025-08-31",
-      quantity: 7,
-    },
-    {
-      name: "Product 6",
-      price: "$200.00",
-      category: "Category 6",
-      expiryDate: "2025-07-31",
-      quantity: 15,
-    },
-    {
-      name: "Product 7",
-      price: "$300.00",
-      category: "Category 7",
-      expiryDate: "2025-06-30",
-      quantity: 9,
-    },
-  ]);
-
-  const lowStockThreshold = 10;
-  const lowStockProducts = products.filter(
-    product => product.quantity < lowStockThreshold
-  );
+  const {lowStockProducts} = useInventoryStore();
 
   return (
     <div className="container mx-auto p-4">
