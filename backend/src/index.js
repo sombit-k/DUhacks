@@ -133,7 +133,7 @@ const checkAndSendReminders = async () => {
             from: process.env.EMAIL,
             to: user.email,
             subject: "⚠️ Urgent: Medicine Out of Stock Alert",
-            text: `Dear ${user.username},\n\nYour medicine "${medicine.name}" is out of stock. Please restock it as soon as possible.\n\nBest regards,\nYour Inventory Team`,
+            text: `Dear ${user.username},\n\nYour product "${medicine.name}" is out of stock. Please restock it as soon as possible.\n\nBest regards,\nYour Inventory Team`,
           });
 
           console.log(`✅ Email Sent to ${user.email}:`, emailInfo.messageId);
