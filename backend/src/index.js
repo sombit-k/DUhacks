@@ -12,6 +12,7 @@ import cors from "cors";
 import bodyParser from "body-parser"; // Import body-parser
 import Medicine from "./models/inventory.model.js";
 import nodemailer from "nodemailer";
+import path from "path";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
