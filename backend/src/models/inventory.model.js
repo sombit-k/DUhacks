@@ -43,7 +43,10 @@ const medicineSchema = new Schema({
     type: String,
     required: true,
   },
-  
+  lastEmailSent: {
+    type: Date,
+    default: null,
+  },
 });
 
 const Medicine = mongoose.model("Medicine", medicineSchema);

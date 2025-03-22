@@ -104,17 +104,30 @@ const checkAndSendReminders = async () => {
           continue;
         }
 
-        console.log(`📧 Sending email to: ${user.email}`);
+        // Check if 24 hours have passed since the last email was sent
+        const now = new Date();
+        const lastEmailSent = medicine.lastEmailSent;
+        const hoursSinceLastEmail = lastEmailSent ? (now - lastEmailSent) / (1000 * 60 * 60) : 24;
 
-        // Send Email Alert
-        let emailInfo = await transporter.sendMail({
-          from: process.env.EMAIL,
-          to: user.email,
-          subject: "⚠️ Urgent: Medicine Out of Stock Alert",
-          text: `Dear ${user.username},\n\nYour medicine "${medicine.name}" is out of stock. Please restock it as soon as possible.\n\nBest regards,\nYour Inventory Team`,
-        });
+        if (hoursSinceLastEmail >= 24) {
+          console.log(`📧 Sending email to: ${user.email}`);
 
-        console.log(`✅ Email Sent to ${user.email}:`, emailInfo.messageId);
+          // Send Email Alert
+          let emailInfo = await transporter.sendMail({
+            from: process.env.EMAIL,
+            to: user.email,
+            subject: "⚠️ Urgent: Medicine Out of Stock Alert",
+            text: `Dear ${user.username},\n\nYour medicine "${medicine.name}" is out of stock. Please restock it as soon as possible.\n\nBest regards,\nYour Inventory Team`,
+          });
+
+          console.log(`✅ Email Sent to ${user.email}:`, emailInfo.messageId);
+
+          // Update the lastEmailSent field
+          medicine.lastEmailSent = now;
+          await medicine.save();
+        } else {
+          console.log(`⏳ Email already sent within the last 24 hours for medicine: ${medicine.name}`);
+        }
       }
     } else {
       console.log(" No out-of-stock medicines found.");
