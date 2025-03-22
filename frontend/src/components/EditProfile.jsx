@@ -30,11 +30,9 @@ function EditProfile() {
     const data = { password, image };
     try {
       await updateProfile(data);
-      alert("Profile updated successfully!");
       navigate("/dashboard/profile"); // Redirect to  updating profile
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("Failed to update profile.");
     }
   };
 

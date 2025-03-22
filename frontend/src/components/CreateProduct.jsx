@@ -46,7 +46,6 @@ function CreateProduct() {
       navigate("/dashboard"); // Navigate to dashboard
     } catch (error) {
       console.error("Error adding product:", error);
-      alert("Failed to add product.");
     }
   };
 

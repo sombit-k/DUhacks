@@ -57,11 +57,9 @@ function EditProduct() {
     e.preventDefault();
     try {
       await updateInventory(authUser.uuid, id, product);
-      alert("Product updated successfully!");
       navigate("/dashboard");
     } catch (error) {
       console.error("Error updating product:", error);
-      alert("Failed to update product.");
     }
   };
 
