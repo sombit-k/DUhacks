@@ -10,6 +10,8 @@ export const useInventoryStore = create((set, get) => ({
   lowStockProducts:[],
 
   isFetchingInventory: false,
+
+  
   isAddingInventory: false,
   isUpdatingInventory: false,
   isDeletingInventory: false,

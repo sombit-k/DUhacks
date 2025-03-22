@@ -3,7 +3,7 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import { useInventoryStore } from "../../store/useInventorystore";
 
 export default function Chart() {
-  const { chartData, seriesData } = useInventoryStore(); // Destructure chartData and seriesData from the store
+  const { chartData, seriesData,isFetchingInventory } = useInventoryStore(); // Destructure chartData and seriesData from the store
 
   // Ensure chartData and seriesData are arrays
   const validatedChartData = Array.isArray(chartData) ? chartData : [];
