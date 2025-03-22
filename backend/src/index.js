@@ -81,6 +81,8 @@ const transporter = nodemailer.createTransport({
     pass: process.env.PASSWORD,
   },
 });
+// Map to track the last email sent time for each product
+const lastEmailSent = new Map();
 
 // Function to Check Medicine Stock and Send Email Reminders
 const checkAndSendReminders = async () => {
@@ -136,4 +138,6 @@ const checkAndSendReminders = async () => {
     console.error("Error Checking Inventory:", error);
   }
 };
-setInterval(checkAndSendReminders, 10000); //10s bad firse check hoga ki koi product out of stock he ki nhi
+
+// Check inventory every 10 seconds
+setInterval(checkAndSendReminders, 10000);
