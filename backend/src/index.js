@@ -81,8 +81,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.PASSWORD,
   },
 });
-// Map to track the last email sent time for each product
-const lastEmailSent = new Map();
 
 // Function to Check Medicine Stock and Send Email Reminders
 const checkAndSendReminders = async () => {
@@ -92,7 +90,7 @@ const checkAndSendReminders = async () => {
     // Find medicines where quantity is 0
     const outOfStockMedicines = await Medicine.find({ quantity: 0 });
 
-    console.log(` Found ${outOfStockMedicines.length} out-of-stock medicines.`);
+    console.log(`Found ${outOfStockMedicines.length} out-of-stock medicines.`);
 
     if (outOfStockMedicines.length > 0) {
       for (const medicine of outOfStockMedicines) {
@@ -102,7 +100,7 @@ const checkAndSendReminders = async () => {
         const user = await User.findOne({ uuid: medicine.userUuid });
 
         if (!user) {
-          console.error(` User not found for medicine: ${medicine.name}`);
+          console.error(`User not found for medicine: ${medicine.name}, userUuid: ${medicine.userUuid}`);
           continue;
         }
 
@@ -132,7 +130,7 @@ const checkAndSendReminders = async () => {
         }
       }
     } else {
-      console.log(" No out-of-stock medicines found.");
+      console.log("No out-of-stock medicines found.");
     }
   } catch (error) {
     console.error("Error Checking Inventory:", error);
