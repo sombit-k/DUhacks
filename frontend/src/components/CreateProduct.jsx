@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Calendar, Package, DollarSign, Hash, Home, Image } from "lucide-react";
+import { Calendar, Package, DollarSign, Hash, Home, Image,Loader2 } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,7 +7,7 @@ import { useInventoryStore } from "../../store/useInventorystore";
 import { useAuthStore } from "../../store/useAuthstore";
 
 function CreateProduct() {
-  const { addNewInventory } = useInventoryStore();
+  const { addNewInventory,isAddingInventory } = useInventoryStore();
   const { authUser } = useAuthStore();
   const navigate = useNavigate();
   const [product, setProduct] = useState({
@@ -150,13 +150,19 @@ function CreateProduct() {
           </div>
           
           <div className="flex justify-center">
-            
+
+
             <button
-              type="submit"
-              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-            >
-              Add Product
-            </button>
+                type="submit"
+                className="w-full btn btn-primary bg-green-400 p-2 rounded-md flex items-center justify-center" // Added flex and justify-center
+                disabled={isAddingInventory} // Disable button while signing up
+              >
+                {isAddingInventory ? (
+                  <Loader2 className="h-5 w-5 animate-spin" /> // Ensure proper size and alignment
+                ) : (
+                  "Add Product"
+                )}
+              </button>
             
           </div>
         </form>

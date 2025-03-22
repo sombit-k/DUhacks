@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import undrawsvg from "../assets/signup.svg";
 import { useAuthStore } from "../../store/useAuthstore";
 import toast from "react-hot-toast";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff,Loader2 } from "lucide-react";
+import Loader from "../components/utils/Loader"; // Import the loader component
+
 
 const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -121,9 +123,14 @@ const SignupForm = () => {
             <div>
               <button
                 type="submit"
-                className="w-full bg-green-400 text-white p-2 rounded-md hover:bg-green-200 focus:outline-none focus:bg-black focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors duration-300"
+                className="w-full btn btn-primary bg-green-400 p-2 rounded-md flex items-center justify-center" // Added flex and justify-center
+                disabled={isSigningUp} // Disable button while signing up
               >
-                Sign Up
+                {isSigningUp ? (
+                  <Loader2 className="h-5 w-5 animate-spin" /> // Ensure proper size and alignment
+                ) : (
+                  "Create Account"
+                )}
               </button>
             </div>
           </form>
