@@ -13,7 +13,11 @@ import bodyParser from "body-parser"; // Import body-parser
 import Medicine from "./models/inventory.model.js";
 import nodemailer from "nodemailer";
 import path from "path";
+import { fileURLToPath } from "url";
 
+// Define __filename and __dirname for ES module scope
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
