@@ -12,7 +12,9 @@ export const useAuthStore = create((set) => ({
 
   checkAuth: async () => {
     try {
-      const res = await axiosInstance.get("/user/check"); // Check if user is logged in
+      const res = await axiosInstance.get("/user/check", {
+        withCredentials: true, // Ensure cookies are sent with the request
+      });
       console.log("RES.DATA", res.data);
       set({ authUser: res.data.user });
     } catch (error) {
@@ -41,7 +43,9 @@ export const useAuthStore = create((set) => ({
 
   logOut: async () => {
     try {
-      await axiosInstance.post("/user/logout"); // Ensure this URL is correct
+      await axiosInstance.post("/user/logout", {}, {
+        withCredentials: true, // Ensure cookies are sent with the request
+      });
       set({ authUser: null });
       toast.success("Logged out successfully!");
     } catch (error) {
@@ -53,7 +57,9 @@ export const useAuthStore = create((set) => ({
   logIn: async (data) => {
     set({ isLoggingIn: true });
     try {
-      const res = await axiosInstance.post("/user/login", data); // Ensure this URL is correct
+      const res = await axiosInstance.post("/user/login", data, {
+        withCredentials: true, // Ensure cookies are sent with the request
+      });
       set({ authUser: res.data.user });
       toast.success("Login successful!");
     } catch (error) {
@@ -67,7 +73,9 @@ export const useAuthStore = create((set) => ({
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
     try {
-      const res = await axiosInstance.put("/user/updateuser", data); // Ensure this URL is correct
+      const res = await axiosInstance.put("/user/updateuser", data, {
+        withCredentials: true, // Ensure cookies are sent with the request
+      });
       console.log("Updated user details:", res.data.user); // Print updated user details
       set({ authUser: res.data.user });
       toast.success("Profile updated successfully");

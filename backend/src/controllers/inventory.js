@@ -16,6 +16,7 @@ export const addNewMedicines = async (req, res) => {
   try {
     const newMedicine = new Medicine({ name, description, image, category, quantity, expiryDate, price, userUuid: user_id });
     await newMedicine.save();
+    console.log(`Medicine added: ${newMedicine.name}, userUuid: ${newMedicine.userUuid}`);
     res.status(201).json({ message: "Medicine added", data: newMedicine });
   } catch (err) {
     res.status(500).json({ message: "Error adding Medicine", error: err });

@@ -80,8 +80,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.PASSWORD,
   },
 });
-// Map to track the last email sent time for each product
-const lastEmailSent = new Map();
 
 // Function to Check Medicine Stock and Send Email Reminders
 const checkAndSendReminders = async () => {
@@ -91,7 +89,7 @@ const checkAndSendReminders = async () => {
     // Find medicines where quantity is 0
     const outOfStockMedicines = await Medicine.find({ quantity: 0 });
 
-    console.log(` Found ${outOfStockMedicines.length} out-of-stock medicines.`);
+    console.log(`Found ${outOfStockMedicines.length} out-of-stock medicines.`);
 
     if (outOfStockMedicines.length > 0) {
       for (const medicine of outOfStockMedicines) {
@@ -101,39 +99,37 @@ const checkAndSendReminders = async () => {
         const user = await User.findOne({ uuid: medicine.userUuid });
 
         if (!user) {
-          console.error(` User not found for medicine: ${medicine.name}`);
+          console.error(`User not found for medicine: ${medicine.name}, userUuid: ${medicine.userUuid}`);
           continue;
         }
 
-        // Check if an email was sent in the last 24 hours
-        const lastSentTime = lastEmailSent.get(medicine.uuid);
-        const now = Date.now();
-        const twentyFourHours = 24 * 60 * 60 * 1000;
+        // Check if 24 hours have passed since the last email was sent
+        const now = new Date();
+        const lastEmailSent = medicine.lastEmailSent;
+        const hoursSinceLastEmail = lastEmailSent ? (now - lastEmailSent) / (1000 * 60 * 60) : 24;
 
-        if (lastSentTime && now - lastSentTime < twentyFourHours) {
-          console.log(
-            `⏳ Email already sent for "${medicine.name}" within the last 24 hours. Skipping.`
-          );
-          continue;
+        if (hoursSinceLastEmail >= 24) {
+          console.log(`📧 Sending email to: ${user.email}`);
+
+          // Send Email Alert
+          let emailInfo = await transporter.sendMail({
+            from: process.env.EMAIL,
+            to: user.email,
+            subject: "⚠️ Urgent: Medicine Out of Stock Alert",
+            text: `Dear ${user.username},\n\nYour medicine "${medicine.name}" is out of stock. Please restock it as soon as possible.\n\nBest regards,\nYour Inventory Team`,
+          });
+
+          console.log(`✅ Email Sent to ${user.email}:`, emailInfo.messageId);
+
+          // Update the lastEmailSent field
+          medicine.lastEmailSent = now;
+          await medicine.save();
+        } else {
+          console.log(`⏳ Email already sent within the last 24 hours for medicine: ${medicine.name}`);
         }
-
-        console.log(`📧 Sending email to: ${user.email}`);
-
-        // Send Email Alert
-        let emailInfo = await transporter.sendMail({
-          from: process.env.EMAIL,
-          to: user.email,
-          subject: "⚠️ Urgent: product Out of Stock Alert",
-          text: `Dear ${user.username},\n\nYour product "${medicine.name}" is out of stock. Please restock it as soon as possible.\n\nBest regards,\nYour Inventory Team`,
-        });
-
-        console.log(`✅ Email Sent to ${user.email}:`, emailInfo.messageId);
-
-        // Update the last email sent time for this product
-        lastEmailSent.set(medicine.uuid, now);
       }
     } else {
-      console.log(" No out-of-stock medicines found.");
+      console.log("No out-of-stock medicines found.");
     }
   } catch (error) {
     console.error("Error Checking Inventory:", error);
