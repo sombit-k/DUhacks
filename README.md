@@ -16,11 +16,9 @@ HTML, CSS, JavaScript, React, Vite, Tailwind CSS, Axios, React Router, MUI (Mate
 ## 🌐 Deployed Link  
 👉 Visit: [https://meditrack-pro.onrender.com](https://meditrack-pro.onrender.com)  
 
-## 📽 Demo Video  
-👉   
+## 📽📸 Demo Video & Screenshots   
+👉 Visit: https://drive.google.com/drive/folders/1VEmc6l6X7xiKVyqj6dkka0jG5e3FwbPt?usp=drive_link
 
-## 📸 Screenshots  
-*
 
 
 Instructions for initial setup
@@ -43,18 +41,6 @@ npm install
 Do the above for both /backend and /frontend and parent folder. Which means you need to do it 3 times.
 
 ## Running the code
-
-To run backend:
-
-```bash
-npm run backend
-```
-
-To run frontend:
-
-```bash
-npm run frontend
-```
 
 To run both, make sure you are in the parent folder:
 
