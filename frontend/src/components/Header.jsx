@@ -18,7 +18,7 @@ function Header({ toggleSidebar }) {
   useEffect(() => {
     const lowStockThreshold = 10;
     const lowStockProducts = inventory.filter(
-      (product) => product.quantity < lowStockThreshold
+      product => product.quantity < lowStockThreshold
     );
     setLowStockCount(lowStockProducts.length);
   }, [inventory]);
@@ -40,12 +40,20 @@ function Header({ toggleSidebar }) {
 
       <div className="flex gap-5 items-center">
         <div className="relative">
-          <BellIcon className="h-6 w-6 cursor-pointer" onClick={handleBellClick} />
+          <BellIcon
+            className="h-6 w-6 cursor-pointer"
+            onClick={handleBellClick}
+          />
+          {lowStockCount > 0 && (
+            <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+          )}
           {showLowStockPopup && (
             <div className="absolute top-8 right-0 bg-red-500 text-white border border-gray-300 shadow-lg rounded-lg p-4 w-64">
               <p>
                 {lowStockCount > 0
-                  ? `You have ${lowStockCount} low stock product${lowStockCount > 1 ? 's' : ''}.`
+                  ? `You have ${lowStockCount} low stock product${
+                      lowStockCount > 1 ? "s" : ""
+                    }.`
                   : "All products are sufficiently stocked."}
               </p>
             </div>
