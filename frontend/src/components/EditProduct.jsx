@@ -59,7 +59,6 @@ function EditProduct() {
     e.preventDefault();
     try {
       await updateInventory(authUser.uuid, id, product);
-      alert("Product updated successfully!");
       navigate("/dashboard");
     } catch (error) {
       console.error("Error updating product:", error);
@@ -180,9 +179,14 @@ function EditProduct() {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+              className="w-full btn btn-primary bg-green-400 p-2 rounded-md flex items-center justify-center" // Added flex and justify-center
+              disabled={isUpdatingInventory} // Disable button while signing up
             >
-              Update Product
+              {isUpdatingInventory ? (
+                <Loader2 className="h-5 w-5 animate-spin" /> // Ensure proper size and alignment
+              ) : (
+                "Update Product"
+              )}
             </button>
           </div>
         </form>

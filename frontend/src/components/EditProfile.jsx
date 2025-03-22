@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAuthStore } from "../../store/useAuthstore";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Home } from "lucide-react";
 
 function EditProfile() {
   const { authUser, updateProfile } = useAuthStore();
@@ -30,11 +32,9 @@ function EditProfile() {
     const data = { password, image };
     try {
       await updateProfile(data);
-      alert("Profile updated successfully!");
       navigate("/dashboard/profile"); // Redirect to  updating profile
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("Failed to update profile.");
     }
   };
 
@@ -83,6 +83,13 @@ function EditProfile() {
             </button>
           </div>
         </form>
+        <div className="flex justify-center">
+                <Link to="/dashboard">
+                    <button className="text-blue-600 hover:text-blue-800 font-semibold">
+                      <Home className="inline-block mr-2" /> Back to Dashboard
+                    </button>
+                  </Link>
+                </div>
       </div>
     </div>
   );
