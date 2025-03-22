@@ -13,11 +13,9 @@ import bodyParser from "body-parser"; // Import body-parser
 import Medicine from "./models/inventory.model.js";
 import nodemailer from "nodemailer";
 import path from "path";
-import { fileURLToPath } from "url";
 
 // Define __filename and __dirname for ES module scope
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname=path.resolve()
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
@@ -81,7 +79,13 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+    const filePath = path.join(__dirname, "../frontend", "dist", "index.html");
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        console.error("Error serving index.html:", err);
+        res.status(404).send("index.html not found. Please ensure the frontend is built and the file exists.");
+      }
+    });
   });
 }
 
@@ -112,7 +116,7 @@ const checkAndSendReminders = async () => {
         const user = await User.findOne({ uuid: medicine.userUuid });
 
         if (!user) {
-          console.error(`User not found for medicine: ${medicine.name}, userUuid: ${medicine.userUuid}`);
+          console.error("User not found for medicine: ${medicine.name, userUuid: ${medicine.userUuid}");
           continue;
         }
 
