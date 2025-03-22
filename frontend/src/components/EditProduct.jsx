@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useInventoryStore } from "../../store/useInventorystore";
 import { useAuthStore } from "../../store/useAuthstore";
+import Loader from "../components/utils/Loader";
 
 function EditProduct() {
   const { id } = useParams();
   const { authUser } = useAuthStore();
-  const { getOneInventory, updateInventory, inventory } = useInventoryStore();
+  const { getOneInventory, updateInventory, inventory, isFetchingInventory } =
+    useInventoryStore();
   const [product, setProduct] = useState({
     name: "",
     description: "",
@@ -28,22 +30,22 @@ function EditProduct() {
   }, [authUser, getOneInventory, id]);
 
   useEffect(() => {
-    const foundProduct = inventory.find((item) => item.uuid === id);
+    const foundProduct = inventory.find(item => item.uuid === id);
     if (foundProduct) {
       setProduct(foundProduct);
     }
   }, [inventory, id]);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
   };
 
-  const handleDateChange = (date) => {
+  const handleDateChange = date => {
     setProduct({ ...product, expiryDate: date });
   };
 
-  const handleImageChange = async (e) => {
+  const handleImageChange = async e => {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
@@ -53,7 +55,7 @@ function EditProduct() {
     reader.readAsDataURL(file);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       await updateInventory(authUser.uuid, id, product);
@@ -64,6 +66,15 @@ function EditProduct() {
       alert("Failed to update product.");
     }
   };
+
+  // Show loader if isFetchingInventory is true
+  if (isFetchingInventory) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <Loader size={100} /> {/* Pass a larger size prop to the Loader */}
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -132,7 +143,7 @@ function EditProduct() {
               type="date"
               name="expiryDate"
               value={new Date(product.expiryDate).toISOString().split("T")[0]}
-              onChange={(e) => handleDateChange(new Date(e.target.value))}
+              onChange={e => handleDateChange(new Date(e.target.value))}
               className="block w-full px-3 py-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
             />
           </div>

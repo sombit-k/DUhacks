@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useInventoryStore } from "../../store/useInventorystore";
 import { useAuthStore } from "../../store/useAuthstore";
+import Loader from "../components/utils/Loader";
 
 function ShowProduct() {
   const { id } = useParams();
@@ -23,12 +24,16 @@ function ShowProduct() {
   }, [authUser, getOneInventory, id]);
 
   useEffect(() => {
-    const foundProduct = inventory.find((item) => item.uuid === id);
+    const foundProduct = inventory.find(item => item.uuid === id);
     setProduct(foundProduct);
   }, [inventory, id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <Loader size={100} /> {/* Pass a larger size prop to the Loader */}
+      </div>
+    );
   }
 
   if (!product) {
@@ -110,12 +115,12 @@ function ShowProduct() {
                 Cancel
               </button>
               <Link to="/dashboard">
-              <button
-                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-                onClick={handleDelete}
-              >
-                Delete
-              </button>
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </button>
               </Link>
             </div>
           </div>
