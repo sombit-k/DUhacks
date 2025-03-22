@@ -136,7 +136,6 @@ const checkAndSendReminders = async () => {
             text: `Dear ${user.username},\n\nYour product "${medicine.name}" is out of stock. Please restock it as soon as possible.\n\nBest regards,\nYour Inventory Team`,
           });
 
-          console.log(`✅ Email Sent to ${user.email}:`, emailInfo.messageId);
 
           // Update the lastEmailSent field
           medicine.lastEmailSent = now;
