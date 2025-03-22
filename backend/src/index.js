@@ -81,6 +81,8 @@ const transporter = nodemailer.createTransport({
     pass: process.env.PASSWORD,
   },
 });
+// Map to track the last email sent time for each product
+const lastEmailSent = new Map();
 
 // Function to Check Medicine Stock and Send Email Reminders
 const checkAndSendReminders = async () => {
@@ -104,17 +106,32 @@ const checkAndSendReminders = async () => {
           continue;
         }
 
+        // Check if an email was sent in the last 24 hours
+        const lastSentTime = lastEmailSent.get(medicine.uuid);
+        const now = Date.now();
+        const twentyFourHours = 24 * 60 * 60 * 1000;
+
+        if (lastSentTime && now - lastSentTime < twentyFourHours) {
+          console.log(
+            `⏳ Email already sent for "${medicine.name}" within the last 24 hours. Skipping.`
+          );
+          continue;
+        }
+
         console.log(`📧 Sending email to: ${user.email}`);
 
         // Send Email Alert
         let emailInfo = await transporter.sendMail({
           from: process.env.EMAIL,
           to: user.email,
-          subject: "⚠️ Urgent: Medicine Out of Stock Alert",
-          text: `Dear ${user.username},\n\nYour medicine "${medicine.name}" is out of stock. Please restock it as soon as possible.\n\nBest regards,\nYour Inventory Team`,
+          subject: "⚠️ Urgent: product Out of Stock Alert",
+          text: `Dear ${user.username},\n\nYour product "${medicine.name}" is out of stock. Please restock it as soon as possible.\n\nBest regards,\nYour Inventory Team`,
         });
 
         console.log(`✅ Email Sent to ${user.email}:`, emailInfo.messageId);
+
+        // Update the last email sent time for this product
+        lastEmailSent.set(medicine.uuid, now);
       }
     } else {
       console.log(" No out-of-stock medicines found.");
@@ -123,4 +140,6 @@ const checkAndSendReminders = async () => {
     console.error("Error Checking Inventory:", error);
   }
 };
-setInterval(checkAndSendReminders, 10000); //10s bad firse check hoga ki koi product out of stock he ki nhi
+
+// Check inventory every 10 seconds
+setInterval(checkAndSendReminders, 10000);
