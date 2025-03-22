@@ -1,43 +1,110 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 function ContactUs() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Handle Input Changes
+  const handleChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Form Submission Handler
+  const onSubmit = async event => {
+    event.preventDefault();
+    setIsSubmitting(true);
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("access_key", "bc86b073-5475-4c8a-8976-3d89b81e5b49");
+
+    Object.entries(formData).forEach(([key, value]) => {
+      formDataToSend.append(key, value);
+    });
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(Object.fromEntries(formDataToSend)),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        console.log("Message sent successfully:", result);
+        setFormData({ name: "", email: "", message: "" }); // Reset form after successful submission
+      } else {
+        console.error("Submission failed:", result);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+
+    setIsSubmitting(false);
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="max-w-7xl mx-auto p-4 md:p-8 bg-white">
+      <div className="max-w-7xl mx-auto p-6 md:p-8 bg-white shadow-lg rounded-lg">
         <div className="grid md:grid-cols-2 gap-8 items-start">
           <div className="bg-gray-50 rounded-lg p-6">
             <h2 className="text-3xl font-bold text-indigo-900 mb-4">
               Get in touch
             </h2>
-            <p className="text-gray-600 mb-8 text-sm">
-              Feel free to contact us and we will get back to you as soon as
-              possible
+            <p className="text-gray-600 mb-6 text-sm">
+              Feel free to contact us, and we will get back to you as soon as
+              possible.
             </p>
 
-            <div className="space-y-4">
+            <form className="space-y-4" onSubmit={onSubmit}>
               <input
                 type="text"
                 placeholder="Name"
-                className="w-full p-3 rounded-lg bg-white border text-sm border-gray-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="w-full p-3 rounded-lg bg-white border text-sm border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
               />
               <input
                 type="email"
+                name="email"
                 placeholder="E-mail"
-                className="w-full p-3 rounded-lg bg-white border text-sm border-gray-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full p-3 rounded-lg bg-white border text-sm border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
               />
               <textarea
+                name="message"
                 placeholder="Message"
                 rows={4}
-                className="w-full p-3 rounded-lg bg-white border text-sm border-gray-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none resize-none"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                className="w-full p-3 rounded-lg bg-white border text-sm border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none resize-none"
               ></textarea>
               <button
-                type="button"
-                className="w-full text-sm bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                type="submit"
+                className={`w-full text-sm py-3 px-6 rounded-lg transition-colors font-semibold ${
+                  isSubmitting
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-green-500 hover:bg-green-600 text-white"
+                }`}
+                disabled={isSubmitting}
               >
-                Send
+                {isSubmitting ? "Sending..." : "Send"}
               </button>
-            </div>
+            </form>
           </div>
 
           <div className="space-y-8">

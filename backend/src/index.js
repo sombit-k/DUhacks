@@ -69,9 +69,8 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Use routes for user-related functionality
 app.use("/api/user", userRouter);
-app.use("/api/inventory", inventoryRoutes); // Ensure the inventory routes are used
+app.use("/api/inventory", inventoryRoutes);
 
 // Nodemailer Setup
 const transporter = nodemailer.createTransport({
